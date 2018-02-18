@@ -16,6 +16,12 @@ let setup = env => {
   {egg: loadRainbowEgg(env), left: 20, top: 20, frames: 18, frame: 1};
 };
 
+let tiles = Tiles.tiles;
+
+let superBoard = Board.createBoardFromIDs(Board.idBoard);
+
+Js.log(superBoard);
+
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
 let drawBird = (gameStuff, env) => {

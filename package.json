@@ -10,6 +10,7 @@
     "clean": "bsb -clean-world"
   },
   "dependencies": {
+    "rationale": "^0.1.3",
     "reprocessing": "schmavery/reprocessing"
   },
   "devDependencies": {
