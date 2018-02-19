@@ -1,9 +1,11 @@
 open Rationale;
 
+open Reprocessing;
+
 type tile = {
   id: int,
   title: string,
-  img: string,
+  filename: string,
   background: bool,
   frontLayer: bool,
   collectable: int,
@@ -15,6 +17,13 @@ type tile = {
   y: int
 };
 
+type imageAsset = (string, Reprocessing_Types.Types.imageT);
+
+let loadImage = (env, filename: string) : imageAsset => (
+  filename,
+  Draw.loadImage(~filename="assets/" ++ filename, ~isPixel=true, env)
+);
+
 let createTile =
     (
       ~action="",
@@ -25,7 +34,7 @@ let createTile =
       ~dontAdd=false,
       ~frontLayer=false,
       ~id=0,
-      ~img="",
+      ~filename="",
       ~title="",
       ~x=0,
       ~y=0,
@@ -33,7 +42,7 @@ let createTile =
     ) => {
   id,
   title,
-  img,
+  filename,
   background,
   frontLayer,
   collectable,
@@ -45,15 +54,21 @@ let createTile =
   y
 };
 
-let tiles = [
-  createTile(~background=true, ~id=1, ~img="sky.png", ~title="Sky", ()),
-  createTile(~background=false, ~id=2, ~img="fabric.png", ~title="Fabric", ()),
+let tiles: list(tile) = [
+  createTile(~background=true, ~id=1, ~filename="sky.png", ~title="Sky", ()),
+  createTile(
+    ~background=false,
+    ~id=2,
+    ~filename="fabric.png",
+    ~title="Fabric",
+    ()
+  ),
   createTile(
     ~background=true,
     ~collectable=1,
     ~frontLayer=true,
     ~id=3,
-    ~img="cacti.png",
+    ~filename="cacti.png",
     ~title="Cacti",
     ()
   ),
@@ -62,7 +77,7 @@ let tiles = [
     ~collectable=10,
     ~frontLayer=true,
     ~id=4,
-    ~img="plant.png",
+    ~filename="plant.png",
     ~title="Plant",
     ()
   ),
@@ -70,45 +85,66 @@ let tiles = [
     ~background=false,
     ~breakable=true,
     ~id=5,
-    ~img="crate.png",
+    ~filename="crate.png",
     ~title="Crate",
     ()
   ),
   createTile(
     ~background=false,
     ~id=8,
-    ~img="work-surface-2.png",
+    ~filename="work-surface-2.png",
     ~title="Work surface 2",
     ()
   ),
   createTile(
     ~background=false,
     ~id=9,
-    ~img="work-surface-3.png",
+    ~filename="work-surface-3.png",
     ~title="Work surface 3",
     ()
   ),
   createTile(
     ~background=false,
     ~id=10,
-    ~img="work-surface-4.png",
+    ~filename="work-surface-4.png",
     ~title="Work surface 4",
     ()
   ),
-  createTile(~background=false, ~id=11, ~img="tile.png", ~title="Tiles", ()),
+  createTile(
+    ~background=false,
+    ~id=11,
+    ~filename="tile.png",
+    ~title="Tiles",
+    ()
+  ),
   createTile(
     ~action="completeLevel",
     ~background=true,
     ~createPlayer="egg",
     ~frontLayer=true,
     ~id=12,
-    ~img="egg-cup.png",
+    ~filename="egg-cup.png",
     ~title="Egg Cup",
     ()
   )
 ];
 
 let getTileByID = id => RList.find(tile => tile.id === id, tiles);
+
+let loadTileImages = env =>
+  List.map(tile => loadImage(env, tile.filename), tiles);
+
+let getTileImageByID =
+    (tileImages: list(imageAsset), filename: string)
+    : option(imageAsset) =>
+  RList.find(
+    tileImage =>
+      switch tileImage {
+      | (imgName, _) => imgName === filename
+      | (_, _) => false
+      },
+    tileImages
+  );
 /*
 
 
