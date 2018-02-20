@@ -4,15 +4,7 @@
   "bs-dependencies": ["reprocessing", "rationale"],
   "entries": [
     {
-      "backend": "bytecode",
-      "main-module": "Indexhot"
-    },
-    {
       "backend": "js",
-      "main-module": "Index"
-    },
-    {
-      "backend": "native",
       "main-module": "Index"
     }
   ],
