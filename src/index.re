@@ -1,5 +1,7 @@
 open Reprocessing;
 
+open Rationale;
+
 type gameStuff = {
   egg: Tiles.imageAsset,
   tileImages: list(Tiles.imageAsset),
@@ -12,7 +14,7 @@ type gameStuff = {
 let setup = env => {
   Env.size(~width=400, ~height=640, env);
   {
-    egg: Tiles.loadImage(env, "egg-rainbow.png"),
+    egg: Tiles.loadImage(env, "sprites/egg-rainbow.png"),
     tileImages: Tiles.loadTileImages(env),
     left: 64,
     top: 64,
@@ -44,13 +46,38 @@ let drawBird = (gameStuff, env) => {
   {...gameStuff, frame: nextFrame(gameStuff.frames, gameStuff.frame)};
 };
 
-let drawTile = (tile: Tiles.tile, env) => ();
+let drawTile = (gameStuff, env, tile: Tiles.tile) => {
+  let tileSize = 64;
+  Option.fmap(
+    tileImage => {
+      Js.log(tileImage);
+      let (_, image) = tileImage;
+      Draw.subImage(
+        image,
+        ~pos=(tile.x * tileSize, tile.y * tileSize),
+        ~width=tileSize,
+        ~height=tileSize,
+        ~texPos=(0, 0),
+        ~texWidth=tileSize,
+        ~texHeight=tileSize,
+        env
+      );
+    },
+    Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)
+  );
+};
+
+let drawTiles = (gameStuff, env) => {
+  List.map(drawTile(gameStuff, env), tiles);
+  gameStuff;
+};
 
 let clearBackground = env => Draw.background(Constants.black, env);
 
 let draw = (gameStuff, env) => {
   clearBackground(env);
   drawBird(gameStuff, env);
+  drawTiles(gameStuff, env);
 };
 
 run(~setup, ~draw, ());

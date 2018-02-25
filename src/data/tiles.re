@@ -132,7 +132,7 @@ let tiles: list(tile) = [
 let getTileByID = id => RList.find(tile => tile.id === id, tiles);
 
 let loadTileImages = env =>
-  List.map(tile => loadImage(env, tile.filename), tiles);
+  List.map(tile => loadImage(env, "tiles/" ++ tile.filename), tiles);
 
 let getTileImageByID =
     (tileImages: list(imageAsset), filename: string)
