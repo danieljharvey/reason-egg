@@ -77,7 +77,7 @@ let clearBackground = env => Draw.background(Constants.black, env);
 let draw = (gameStuff, env) => {
   clearBackground(env);
   drawBird(gameStuff, env);
-  drawTiles(gameStuff, env);
+  /*drawTiles(gameStuff, env);*/
 };
 
 run(~setup, ~draw, ());

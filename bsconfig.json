@@ -1,7 +1,7 @@
 {
   "name": "reprocessing-example",
   "sources": [{ "dir": "src", "subdirs": true }],
-  "bs-dependencies": ["reprocessing", "rationale"],
+  "bs-dependencies": ["reprocessing", "reasongl", "rationale"],
   "entries": [
     {
       "backend": "bytecode",
