@@ -12,7 +12,8 @@ type gameStuff = {
 };
 
 let setup = env => {
-  Env.size(~width=400, ~height=640, env);
+  Env.size(~width=640, ~height=640, env);
+  Js.log(Tiles.loadTileImages(env));
   {
     egg: Tiles.loadImage(env, "sprites/egg-rainbow.png"),
     tileImages: Tiles.loadTileImages(env),
@@ -47,11 +48,9 @@ let drawBird = (gameStuff, env) => {
 };
 
 let drawTile = (gameStuff, env, tile: Tiles.tile) => {
-  let tileSize = 64;
-  Option.fmap(
-    tileImage => {
-      Js.log(tileImage);
-      let (_, image) = tileImage;
+  let tileSize = 64;  
+    Option.fmap(tileImage => {
+      let (imageTitle, image) = tileImage;
       Draw.subImage(
         image,
         ~pos=(tile.x * tileSize, tile.y * tileSize),
@@ -63,12 +62,27 @@ let drawTile = (gameStuff, env, tile: Tiles.tile) => {
         env
       );
     },
+
+
     Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)
   );
+();
 };
 
+
+let perhapsDrawTile = (gameStuff, env, optionTile) => {
+  switch (optionTile) {
+  | Some(tile) => drawTile(gameStuff, env, tile)
+  | _ => ()
+  };
+};
+
+
 let drawTiles = (gameStuff, env) => {
-  List.map(drawTile(gameStuff, env), tiles);
+  List.iter(
+    List.iter(
+      perhapsDrawTile(gameStuff, env)
+    ), superBoard);
   gameStuff;
 };
 
@@ -76,8 +90,8 @@ let clearBackground = env => Draw.background(Constants.black, env);
 
 let draw = (gameStuff, env) => {
   clearBackground(env);
+  drawTiles(gameStuff, env);
   drawBird(gameStuff, env);
-  /*drawTiles(gameStuff, env);*/
 };
 
 run(~setup, ~draw, ());

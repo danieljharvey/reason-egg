@@ -55,11 +55,11 @@ let createTile =
 };
 
 let tiles: list(tile) = [
-  createTile(~background=true, ~id=1, ~filename="sky.png", ~title="Sky", ()),
+  createTile(~background=true, ~id=1, ~filename="tiles/sky.png", ~title="Sky", ()),
   createTile(
     ~background=false,
     ~id=2,
-    ~filename="fabric.png",
+    ~filename="tiles/fabric.png",
     ~title="Fabric",
     ()
   ),
@@ -68,7 +68,7 @@ let tiles: list(tile) = [
     ~collectable=1,
     ~frontLayer=true,
     ~id=3,
-    ~filename="cacti.png",
+    ~filename="tiles/cacti.png",
     ~title="Cacti",
     ()
   ),
@@ -77,7 +77,7 @@ let tiles: list(tile) = [
     ~collectable=10,
     ~frontLayer=true,
     ~id=4,
-    ~filename="plant.png",
+    ~filename="tiles/plant.png",
     ~title="Plant",
     ()
   ),
@@ -85,35 +85,35 @@ let tiles: list(tile) = [
     ~background=false,
     ~breakable=true,
     ~id=5,
-    ~filename="crate.png",
+    ~filename="tiles/crate.png",
     ~title="Crate",
     ()
   ),
   createTile(
     ~background=false,
     ~id=8,
-    ~filename="work-surface-2.png",
+    ~filename="tiles/work-surface-2.png",
     ~title="Work surface 2",
     ()
   ),
   createTile(
     ~background=false,
     ~id=9,
-    ~filename="work-surface-3.png",
+    ~filename="tiles/work-surface-3.png",
     ~title="Work surface 3",
     ()
   ),
   createTile(
     ~background=false,
     ~id=10,
-    ~filename="work-surface-4.png",
+    ~filename="tiles/work-surface-4.png",
     ~title="Work surface 4",
     ()
   ),
   createTile(
     ~background=false,
     ~id=11,
-    ~filename="tile.png",
+    ~filename="tiles/tile.png",
     ~title="Tiles",
     ()
   ),
@@ -123,7 +123,7 @@ let tiles: list(tile) = [
     ~createPlayer="egg",
     ~frontLayer=true,
     ~id=12,
-    ~filename="egg-cup.png",
+    ~filename="tiles/egg-cup.png",
     ~title="Egg Cup",
     ()
   )
@@ -132,7 +132,7 @@ let tiles: list(tile) = [
 let getTileByID = id => RList.find(tile => tile.id === id, tiles);
 
 let loadTileImages = env =>
-  List.map(tile => loadImage(env, "tiles/" ++ tile.filename), tiles);
+  List.map(tile => loadImage(env, tile.filename), tiles);
 
 let getTileImageByID =
     (tileImages: list(imageAsset), filename: string)
