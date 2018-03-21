@@ -10,10 +10,8 @@
     "clean": "bsb -clean-world"
   },
   "dependencies": {
-    "Reasongl": "bsansouci/reasongl",
-    "ReasonglWeb": "github:bsansouci/reasongl-web",
-    "rationale": "^0.1.3",
-    "reprocessing": "schmavery/reprocessing"
+    "Reprocessing": "schmavery/reprocessing",
+    "Reasongl": "bsansouci/reasongl"
   },
   "devDependencies": {
     "bs-platform": "bsansouci/bsb-native#2.1.1"

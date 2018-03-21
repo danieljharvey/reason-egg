@@ -1,11 +1,18 @@
 {
   "name": "reprocessing-example",
-  "sources": [{ "dir": "src", "subdirs": true }],
-  "bs-dependencies": ["reprocessing", "reasongl", "rationale"],
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "bs-dependencies": [
+    "reprocessing"
+  ],
   "entries": [
     {
       "backend": "bytecode",
-      "main-module": "Indexhot"
+      "main-module": "IndexHot"
     },
     {
       "backend": "js",

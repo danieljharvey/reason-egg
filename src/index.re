@@ -1,10 +1,6 @@
 open Reprocessing;
 
-open Rationale;
-
 let screenSize = (640, 640);
-
-
 
 type gameStuff = {
   egg: Tiles.imageAsset,
@@ -13,24 +9,22 @@ type gameStuff = {
   top: int,
   frames: int,
   frame: int,
-  drawAngle: float
+  drawAngle: float,
 };
 
 let setup = env => {
   let (width, height) = screenSize;
-  Env.size(~width=width, ~height=height, env);
-  Js.log(Tiles.loadTileImages(env));
+  Env.size(~width, ~height, env);
   {
     egg: Tiles.loadImage(env, "sprites/egg-rainbow.png"),
     tileImages: Tiles.loadTileImages(env),
-    left: 64,
-    top: 64,
+    left: 1,
+    top: 1,
     frames: 18,
     frame: 1,
-    drawAngle: 0.0
+    drawAngle: 0.0,
   };
 };
-
 
 let tiles = Tiles.tiles;
 
@@ -46,13 +40,22 @@ let getScreenScale = (screenSize, boardSize) => {
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
-let drawBird = (gameStuff, env): gameStuff => {
-  let eggSize = 64; /*getSpriteSize(screenSize, boardSize);*/
+let drawBird = (gameStuff, env) : gameStuff => {
+  let eggSize = 64;
   let texPosX = gameStuff.frame * eggSize;
   let (_, eggImage) = gameStuff.egg;
+  
+  Draw.pushMatrix(env);
+  
+  let middleLeft = float_of_int((gameStuff.left * eggSize) + (eggSize / 2));
+  let middleTop = float_of_int((gameStuff.top * eggSize) + (eggSize / 2));
+  Draw.translate(middleLeft, middleTop, env);
+  Draw.rotate(Constants.pi /. 2.0, env);
+  
+  Draw.popMatrix(env);
   Draw.subImage(
     eggImage,
-    ~pos=(gameStuff.left, gameStuff.top),
+    ~pos=(gameStuff.left * eggSize, gameStuff.top * eggSize),
     ~width=eggSize,
     ~height=eggSize,
     ~texPos=(texPosX, 0),
@@ -60,12 +63,14 @@ let drawBird = (gameStuff, env): gameStuff => {
     ~texHeight=64,
     env
   );
+  
   {...gameStuff, frame: nextFrame(gameStuff.frames, gameStuff.frame)};
 };
 
 let drawTile = (gameStuff, env, tile: Tiles.tile) => {
-  let tileSize = 64; /*getSpriteSize(screenSize, boardSize);*/
-    Option.fmap(tileImage => {
+  let tileSize = 64;
+  EggUtils.optionMap(
+    tileImage => {
       let (imageTitle, image) = tileImage;
       Draw.subImage(
         image,
@@ -80,67 +85,53 @@ let drawTile = (gameStuff, env, tile: Tiles.tile) => {
     },
     Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)
   );
-();
+  ();
 };
 
-
-let perhapsDrawTile = (gameStuff, env, optionTile) => {
+let perhapsDrawTile = (gameStuff, env, optionTile) =>
   switch (optionTile) {
   | Some(tile) => drawTile(gameStuff, env, tile)
   | _ => ()
   };
-};
-
 
 let drawTiles = (gameStuff, env) => {
-  List.iter(
-    List.iter(
-      perhapsDrawTile(gameStuff, env)
-    ), superBoard);
+  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), superBoard);
   gameStuff;
 };
 
 let clearBackground = env => Draw.background(Constants.black, env);
 
-let getScreenWidth = (screenSize) => {
+let getScreenWidth = screenSize => {
   let (width, _) = screenSize;
   width;
 };
 
-let getCenter = (screenSize): float => {
+let getCenter = screenSize : float =>
   float_of_int(getScreenWidth(screenSize)) /. 2.0;
+
+let incrementAngle = gameStuff => {
+  ...gameStuff,
+  drawAngle: gameStuff.drawAngle +. 0.01
 };
 
-let incrementAngle = (gameStuff) => {
-  {...gameStuff, drawAngle: gameStuff.drawAngle +. 0.01};
-};
-
-let doRotate = (gameStuff, env) => {
- (gameStuff.drawAngle == 0.0) ? gameStuff : {
-   let center = getCenter(screenSize);
-   Draw.translate(center, center, env);
-   Draw.rotate(gameStuff.drawAngle, env);
-   Draw.translate(-1.0 *. center, -1.0 *. center, env);
-   gameStuff;
- }
-};
+let doRotate = (gameStuff, env) =>
+  gameStuff.drawAngle == 0.0 ?
+    gameStuff :
+    {
+      let center = getCenter(screenSize);
+      Draw.translate(center, center, env);
+      Draw.rotate(gameStuff.drawAngle, env);
+      Draw.translate((-1.0) *. center, (-1.0) *. center, env);
+      gameStuff;
+    };
 
 let draw = (gameStuff, env) => {
-  
-
   let scale = getScreenScale(screenSize, boardSize);
-  
   Draw.scale(scale, scale, env);
-  
   doRotate(gameStuff, env);
-  
   clearBackground(env);
   drawTiles(gameStuff, env);
   let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;
-  
-  
-  
-  
   newGameStuff;
 };
 

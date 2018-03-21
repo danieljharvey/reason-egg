@@ -1,5 +1,3 @@
-open Rationale;
-
 open Reprocessing;
 
 type tile = {
@@ -129,7 +127,7 @@ let tiles: list(tile) = [
   )
 ];
 
-let getTileByID = id => RList.find(tile => tile.id === id, tiles);
+let getTileByID = id => EggUtils.find(tile => tile.id === id, tiles);
 
 let loadTileImages = env =>
   List.map(tile => loadImage(env, tile.filename), tiles);
@@ -137,7 +135,7 @@ let loadTileImages = env =>
 let getTileImageByID =
     (tileImages: list(imageAsset), filename: string)
     : option(imageAsset) =>
-  RList.find(
+  EggUtils.find(
     tileImage =>
       switch tileImage {
       | (imgName, _) => imgName === filename

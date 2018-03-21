@@ -1,5 +1,3 @@
-open Rationale;
-
 type board = list(list(Tiles.tile));
 
 let idBoard = [
@@ -19,12 +17,13 @@ let setTileLocation = (x: int, y: int, tile: Tiles.tile) => {
   {...tile, x, y};
 };
 
+
 let createBoardFromIDs = (idBoard: list(list(int))) =>
   List.mapi(
     (y, row) =>
       List.mapi(
         (x, item) => {
-          Option.fmap(setTileLocation(x, y), Tiles.getTileByID(item))
+          EggUtils.optionMap(setTileLocation(x, y), Tiles.getTileByID(item))
         },
         row
       ),
