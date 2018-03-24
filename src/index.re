@@ -69,12 +69,21 @@ let drawBird = (gameStuff, env) : gameStuff => {
 
 let drawTile = (gameStuff, env, tile: Tiles.tile) => {
   let tileSize = 64;
+
   EggUtils.optionMap(
+    
     tileImage => {
+      Draw.pushMatrix(env);
+  
+      let middleLeft = float_of_int((tile.x * tileSize) + (tileSize / 2));
+      let middleTop = float_of_int((tile.y * tileSize) + (tileSize / 2));
+      Draw.translate(middleLeft, middleTop, env);
+      Draw.rotate(gameStuff.drawAngle *. -1.0, env);
+      
       let (imageTitle, image) = tileImage;
       Draw.subImage(
         image,
-        ~pos=(tile.x * tileSize, tile.y * tileSize),
+        ~pos=(-1 * tileSize, -1 * tileSize),
         ~width=tileSize,
         ~height=tileSize,
         ~texPos=(0, 0),
@@ -82,6 +91,7 @@ let drawTile = (gameStuff, env, tile: Tiles.tile) => {
         ~texHeight=tileSize,
         env
       );
+      Draw.popMatrix(env);
     },
     Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)
   );
