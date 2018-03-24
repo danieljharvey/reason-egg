@@ -9,6 +9,7 @@ type gameStuff = {
   top: int,
   frames: int,
   frame: int,
+  boardAngle: float,
   drawAngle: float,
 };
 
@@ -22,7 +23,8 @@ let setup = env => {
     top: 1,
     frames: 18,
     frame: 1,
-    drawAngle: 0.0,
+    boardAngle: 0.0,
+    drawAngle: 0.0
   };
 };
 
@@ -40,22 +42,26 @@ let getScreenScale = (screenSize, boardSize) => {
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
+let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
+  Draw.pushMatrix(env);
+  
+  let middleLeft = float_of_int((x * tileSize) + (tileSize / 2));
+  let middleTop = float_of_int((y * tileSize) + (tileSize / 2));
+  Draw.translate(middleLeft, middleTop, env);
+  Draw.rotate(EggUtils.degreesToRadians(angleDegrees), env);
+  env;
+};
+
 let drawBird = (gameStuff, env) : gameStuff => {
   let eggSize = 64;
   let texPosX = gameStuff.frame * eggSize;
   let (_, eggImage) = gameStuff.egg;
   
-  Draw.pushMatrix(env);
-  
-  let middleLeft = float_of_int((gameStuff.left * eggSize) + (eggSize / 2));
-  let middleTop = float_of_int((gameStuff.top * eggSize) + (eggSize / 2));
-  Draw.translate(middleLeft, middleTop, env);
-  Draw.rotate(Constants.pi /. 2.0, env);
-  
-  Draw.popMatrix(env);
+  rotateTransform(gameStuff.left, gameStuff.top, eggSize, -1.0 *. gameStuff.drawAngle, env);
+
   Draw.subImage(
     eggImage,
-    ~pos=(gameStuff.left * eggSize, gameStuff.top * eggSize),
+    ~pos=(-1 * eggSize, -1 * eggSize),
     ~width=eggSize,
     ~height=eggSize,
     ~texPos=(texPosX, 0),
@@ -63,9 +69,12 @@ let drawBird = (gameStuff, env) : gameStuff => {
     ~texHeight=64,
     env
   );
+  Draw.popMatrix(env);
   
   {...gameStuff, frame: nextFrame(gameStuff.frames, gameStuff.frame)};
 };
+
+
 
 let drawTile = (gameStuff, env, tile: Tiles.tile) => {
   let tileSize = 64;
@@ -73,12 +82,7 @@ let drawTile = (gameStuff, env, tile: Tiles.tile) => {
   EggUtils.optionMap(
     
     tileImage => {
-      Draw.pushMatrix(env);
-  
-      let middleLeft = float_of_int((tile.x * tileSize) + (tileSize / 2));
-      let middleTop = float_of_int((tile.y * tileSize) + (tileSize / 2));
-      Draw.translate(middleLeft, middleTop, env);
-      Draw.rotate(gameStuff.drawAngle *. -1.0, env);
+      rotateTransform(tile.x, tile.y, tileSize, -1.0 *. gameStuff.drawAngle, env);
       
       let (imageTitle, image) = tileImage;
       Draw.subImage(
@@ -121,16 +125,16 @@ let getCenter = screenSize : float =>
 
 let incrementAngle = gameStuff => {
   ...gameStuff,
-  drawAngle: gameStuff.drawAngle +. 0.01
+  boardAngle: gameStuff.boardAngle +. 0.1
 };
 
 let doRotate = (gameStuff, env) =>
-  gameStuff.drawAngle == 0.0 ?
+  gameStuff.boardAngle == 0.0 ?
     gameStuff :
     {
       let center = getCenter(screenSize);
       Draw.translate(center, center, env);
-      Draw.rotate(gameStuff.drawAngle, env);
+      Draw.rotate(EggUtils.degreesToRadians(gameStuff.boardAngle), env);
       Draw.translate((-1.0) *. center, (-1.0) *. center, env);
       gameStuff;
     };
