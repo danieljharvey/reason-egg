@@ -26,8 +26,6 @@ let getScreenScale = (screenSize, boardSize) => {
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
-
-
 let incrementPlayerFrame = (player: player): player => 
   {
     ...player,
@@ -59,7 +57,7 @@ let changeAngle = (newAngle: float): float => {
 let updateGameStuff = (gameStuff: gameStuff) => {
   {
     ...gameStuff,
-    boardAngle: changeAngle(gameStuff.boardAngle -. 0.1),
+    boardAngle: changeAngle(gameStuff.boardAngle -. 1.0),
     players: List.map(incrementPlayerFrame, gameStuff.players),
     drawAngle: calcDrawAngle(gameStuff.boardAngle)
   };
@@ -68,12 +66,17 @@ let updateGameStuff = (gameStuff: gameStuff) => {
 
 let draw = (gameStuff, env) => {
   let scale = getScreenScale(screenSize, boardSize);
+  Draw.pushMatrix(env);
   Draw.scale(scale, scale, env);
   Render.doRotate(gameStuff, env);
   Render.clearBackground(env);
+  /*let offset = -1.0 *. (float_of_int(tileSize) /. 2.0);
+  Draw.translate(offset,offset, env);*/
   Render.drawTiles(gameStuff, env);
   Render.drawPlayers(gameStuff, env);
 
+  Draw.popMatrix(env);
+  
   /*let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;*/
   updateGameStuff(gameStuff);
 };

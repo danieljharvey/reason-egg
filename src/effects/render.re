@@ -22,9 +22,7 @@ let doRotate = (gameStuff, env) =>
     };
 
 
-let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
-    Draw.pushMatrix(env);
-    
+let rotateTransform = (x, y, tileSize, angleDegrees, env) => {    
     let middleLeft = float_of_int((x * tileSize) + (tileSize / 2));
     let middleTop = float_of_int((y * tileSize) + (tileSize / 2));
     Draw.translate(middleLeft, middleTop, env);
@@ -35,13 +33,17 @@ let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
   let drawPlayer = (env, coords: EggTypes.coords, frame: int, imageAsset: imageAsset, drawAngle: float) => {
     let texPosX = frame * tileSize;
     
+    Draw.pushMatrix(env);
+
     rotateTransform(coords.x, coords.y, tileSize, -1.0 *. drawAngle, env);
   
     let (_,image) = imageAsset;
-  
+    
+    let offset = -1 * tileSize / 2;
+
     Draw.subImage(
       image,
-      ~pos=(-1 * tileSize, -1 * tileSize),
+      ~pos=(offset, offset),
       ~width=tileSize,
       ~height=tileSize,
       ~texPos=(texPosX, 0),
@@ -56,13 +58,17 @@ let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
   
   let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
       
+    Draw.pushMatrix(env);
+
     rotateTransform(tile.x, tile.y, tileSize, -1.0 *. gameStuff.drawAngle, env);
     
     let (_,image) = imageAsset;
-  
+    
+    let offset = -1 * tileSize / 2;
+
     Draw.subImage(
       image,
-      ~pos=(-1 * tileSize, -1 * tileSize),
+      ~pos=(offset, offset),
       ~width=tileSize,
       ~height=tileSize,
       ~texPos=(0, 0),
