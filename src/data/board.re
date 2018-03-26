@@ -29,3 +29,6 @@ let createBoardFromIDs = (idBoard: list(list(int))) =>
       ),
     idBoard
   );
+
+  let superBoard = createBoardFromIDs(idBoard);
+

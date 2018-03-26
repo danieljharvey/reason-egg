@@ -8,7 +8,7 @@ let createPlayer = (
         ~oldDirection=defaultCoords,
         ~currentFrame=0,
         ~id=0,
-        ~frames=1,
+        ~frames=18,
         ~multiplier=1,
         ~falling=false,
         ~playerType="",
@@ -46,7 +46,9 @@ let createPlayer = (
 };
 
 let players: list(player) = [
-    createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x:2,y:2},())
+    createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x:2,y:2},()),
+    createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x:4,y:4},()),
+    createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x:6,y:6},())
 ];
 
 let loadPlayerImages = env =>

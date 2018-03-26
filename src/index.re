@@ -1,9 +1,6 @@
 open Reprocessing;
 open EggTypes;
-
-let screenSize = (640, 640);
-
-let tileSize = 64;
+open EggConstants;
 
 let setup = env => {
   let (width, height) = screenSize;
@@ -22,9 +19,7 @@ let setup = env => {
 
 let tiles = Tiles.tiles;
 
-let superBoard = Board.createBoardFromIDs(Board.idBoard);
-
-let boardSize = List.length(superBoard);
+let boardSize = List.length(Board.superBoard);
 
 let getScreenScale = (screenSize, boardSize) => {
   let (width, _) = screenSize;
@@ -34,73 +29,6 @@ let getScreenScale = (screenSize, boardSize) => {
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
-let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
-  Draw.pushMatrix(env);
-  
-  let middleLeft = float_of_int((x * tileSize) + (tileSize / 2));
-  let middleTop = float_of_int((y * tileSize) + (tileSize / 2));
-  Draw.translate(middleLeft, middleTop, env);
-  Draw.rotate(EggUtils.degreesToRadians(angleDegrees), env);
-  env;
-};
-
-let drawPlayer = (env, coords, frame, image, drawAngle) => {
-  let texPosX = frame * tileSize;
-  
-  rotateTransform(coords.x, coords.y, tileSize, -1.0 *. drawAngle, env);
-
-  Draw.subImage(
-    image,
-    ~pos=(-1 * tileSize, -1 * tileSize),
-    ~width=tileSize,
-    ~height=tileSize,
-    ~texPos=(texPosX, 0),
-    ~texWidth=tileSize,
-    ~texHeight=tileSize,
-    env
-  );
-  Draw.popMatrix(env);
-  
-  ();
-};
-
-let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
-    
-  rotateTransform(tile.x, tile.y, tileSize, -1.0 *. gameStuff.drawAngle, env);
-  
-  let (_,image) = imageAsset;
-
-  Draw.subImage(
-    image,
-    ~pos=(-1 * tileSize, -1 * tileSize),
-    ~width=tileSize,
-    ~height=tileSize,
-    ~texPos=(0, 0),
-    ~texWidth=tileSize,
-    ~texHeight=tileSize,
-    env
-  );
-  Draw.popMatrix(env);
-  ();
-};
-
-let perhapsDrawTile = (gameStuff, env, optionTile) => {
-  EggUtils.optionMap(tile => {
-    switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
-    | Some(image) => drawTile(gameStuff, env, tile, image)
-    | _ => ()
-    };
-  }, optionTile);
-  ();
-};
-
-let drawTiles = (gameStuff, env) => {
-  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), superBoard);
-  gameStuff;
-};
-
-let clearBackground = env => Draw.background(Constants.black, env);
-
 let getScreenWidth = screenSize => {
   let (width, _) = screenSize;
   width;
@@ -108,11 +36,6 @@ let getScreenWidth = screenSize => {
 
 let getCenter = screenSize : float =>
   float_of_int(getScreenWidth(screenSize)) /. 2.0;
-
-let incrementAngle = gameStuff => {
-  ...gameStuff,
-  boardAngle: gameStuff.boardAngle +. 0.1
-};
 
 let doRotate = (gameStuff, env) =>
   gameStuff.boardAngle == 0.0 ?
@@ -125,14 +48,31 @@ let doRotate = (gameStuff, env) =>
       gameStuff;
     };
 
+
+let incrementPlayerFrame = (player: player): player => 
+  {
+    ...player,
+    currentFrame: nextFrame(player.frames, player.currentFrame)
+  };
+
+let updateGameStuff = (gameStuff: gameStuff) => {
+  {
+    ...gameStuff,
+    boardAngle: gameStuff.boardAngle +. 0.1,
+    players: List.map(incrementPlayerFrame, gameStuff.players)
+  };
+};
+
 let draw = (gameStuff, env) => {
   let scale = getScreenScale(screenSize, boardSize);
   Draw.scale(scale, scale, env);
   doRotate(gameStuff, env);
-  clearBackground(env);
-  drawTiles(gameStuff, env);
+  Render.clearBackground(env);
+  Render.drawTiles(gameStuff, env);
+  Render.drawPlayers(gameStuff, env);
+
   /*let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;*/
-  incrementAngle(gameStuff);
+  updateGameStuff(gameStuff);
 };
 
 run(~setup, ~draw, ());
