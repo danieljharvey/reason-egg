@@ -1,26 +1,4 @@
-open Reprocessing;
-
-type tile = {
-  id: int,
-  title: string,
-  filename: string,
-  background: bool,
-  frontLayer: bool,
-  collectable: int,
-  breakable: bool,
-  action: string,
-  dontAdd: bool,
-  createPlayer: string,
-  x: int,
-  y: int
-};
-
-type imageAsset = (string, Reprocessing_Types.Types.imageT);
-
-let loadImage = (env, filename: string) : imageAsset => (
-  filename,
-  Draw.loadImage(~filename="assets/" ++ filename, ~isPixel=true, env)
-);
+open EggTypes;
 
 let createTile =
     (
@@ -37,7 +15,7 @@ let createTile =
       ~x=0,
       ~y=0,
       ()
-    ) => {
+    ): EggTypes.tile => {
   id,
   title,
   filename,
@@ -52,7 +30,7 @@ let createTile =
   y
 };
 
-let tiles: list(tile) = [
+let tiles: list(EggTypes.tile) = [
   createTile(~background=true, ~id=1, ~filename="tiles/sky.png", ~title="Sky", ()),
   createTile(
     ~background=false,
@@ -130,7 +108,7 @@ let tiles: list(tile) = [
 let getTileByID = id => EggUtils.find(tile => tile.id === id, tiles);
 
 let loadTileImages = env =>
-  List.map(tile => loadImage(env, tile.filename), tiles);
+  List.map(tile => EggUtils.loadImage(env, tile.filename), tiles);
 
 let getTileImageByID =
     (tileImages: list(imageAsset), filename: string)
@@ -242,11 +220,4 @@ let getTileImageByID =
      title: "It is the egg splitter"
    }
  ];
- */
-/*
- let getTile = id => {
-   tiles.find(tile => {
-     return tile.id === id;
-   });
- };
  */

@@ -1,4 +1,4 @@
-type board = list(list(Tiles.tile));
+open EggTypes;
 
 let idBoard = [
   [1, 2, 3, 4, 12, 1, 2, 3,1,1],
@@ -13,7 +13,7 @@ let idBoard = [
   [1, 2, 3, 4, 12, 1, 2, 3,1,1]
 ];
 
-let setTileLocation = (x: int, y: int, tile: Tiles.tile) => {
+let setTileLocation = (x: int, y: int, tile: tile) => {
   {...tile, x, y};
 };
 

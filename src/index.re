@@ -1,26 +1,18 @@
 open Reprocessing;
+open EggTypes;
 
 let screenSize = (640, 640);
 
-type gameStuff = {
-  egg: Tiles.imageAsset,
-  tileImages: list(Tiles.imageAsset),
-  left: int,
-  top: int,
-  frames: int,
-  frame: int,
-  boardAngle: float,
-  drawAngle: float,
-};
+let tileSize = 64;
 
 let setup = env => {
   let (width, height) = screenSize;
   Env.size(~width, ~height, env);
   {
-    egg: Tiles.loadImage(env, "sprites/egg-rainbow.png"),
+    players: Player.players,
     tileImages: Tiles.loadTileImages(env),
-    left: 1,
-    top: 1,
+    playerImages: Player.loadPlayerImages(env),
+    position: {x:1, y:1},
     frames: 18,
     frame: 1,
     boardAngle: 0.0,
@@ -52,61 +44,55 @@ let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
   env;
 };
 
-let drawBird = (gameStuff, env) : gameStuff => {
-  let eggSize = 64;
-  let texPosX = gameStuff.frame * eggSize;
-  let (_, eggImage) = gameStuff.egg;
+let drawPlayer = (env, coords, frame, image, drawAngle) => {
+  let texPosX = frame * tileSize;
   
-  rotateTransform(gameStuff.left, gameStuff.top, eggSize, -1.0 *. gameStuff.drawAngle, env);
+  rotateTransform(coords.x, coords.y, tileSize, -1.0 *. drawAngle, env);
 
   Draw.subImage(
-    eggImage,
-    ~pos=(-1 * eggSize, -1 * eggSize),
-    ~width=eggSize,
-    ~height=eggSize,
+    image,
+    ~pos=(-1 * tileSize, -1 * tileSize),
+    ~width=tileSize,
+    ~height=tileSize,
     ~texPos=(texPosX, 0),
-    ~texWidth=64,
-    ~texHeight=64,
+    ~texWidth=tileSize,
+    ~texHeight=tileSize,
     env
   );
   Draw.popMatrix(env);
   
-  {...gameStuff, frame: nextFrame(gameStuff.frames, gameStuff.frame)};
-};
-
-
-
-let drawTile = (gameStuff, env, tile: Tiles.tile) => {
-  let tileSize = 64;
-
-  EggUtils.optionMap(
-    
-    tileImage => {
-      rotateTransform(tile.x, tile.y, tileSize, -1.0 *. gameStuff.drawAngle, env);
-      
-      let (imageTitle, image) = tileImage;
-      Draw.subImage(
-        image,
-        ~pos=(-1 * tileSize, -1 * tileSize),
-        ~width=tileSize,
-        ~height=tileSize,
-        ~texPos=(0, 0),
-        ~texWidth=tileSize,
-        ~texHeight=tileSize,
-        env
-      );
-      Draw.popMatrix(env);
-    },
-    Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)
-  );
   ();
 };
 
-let perhapsDrawTile = (gameStuff, env, optionTile) =>
-  switch (optionTile) {
-  | Some(tile) => drawTile(gameStuff, env, tile)
-  | _ => ()
-  };
+let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
+    
+  rotateTransform(tile.x, tile.y, tileSize, -1.0 *. gameStuff.drawAngle, env);
+  
+  let (_,image) = imageAsset;
+
+  Draw.subImage(
+    image,
+    ~pos=(-1 * tileSize, -1 * tileSize),
+    ~width=tileSize,
+    ~height=tileSize,
+    ~texPos=(0, 0),
+    ~texWidth=tileSize,
+    ~texHeight=tileSize,
+    env
+  );
+  Draw.popMatrix(env);
+  ();
+};
+
+let perhapsDrawTile = (gameStuff, env, optionTile) => {
+  EggUtils.optionMap(tile => {
+    switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
+    | Some(image) => drawTile(gameStuff, env, tile, image)
+    | _ => ()
+    };
+  }, optionTile);
+  ();
+};
 
 let drawTiles = (gameStuff, env) => {
   List.iter(List.iter(perhapsDrawTile(gameStuff, env)), superBoard);
@@ -145,8 +131,8 @@ let draw = (gameStuff, env) => {
   doRotate(gameStuff, env);
   clearBackground(env);
   drawTiles(gameStuff, env);
-  let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;
-  newGameStuff;
+  /*let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;*/
+  incrementAngle(gameStuff);
 };
 
 run(~setup, ~draw, ());
