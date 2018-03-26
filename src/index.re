@@ -9,9 +9,6 @@ let setup = env => {
     players: Player.players,
     tileImages: Tiles.loadTileImages(env),
     playerImages: Player.loadPlayerImages(env),
-    position: {x:1, y:1},
-    frames: 18,
-    frame: 1,
     boardAngle: 0.0,
     drawAngle: 0.0
   };
@@ -29,24 +26,6 @@ let getScreenScale = (screenSize, boardSize) => {
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
-let getScreenWidth = screenSize => {
-  let (width, _) = screenSize;
-  width;
-};
-
-let getCenter = screenSize : float =>
-  float_of_int(getScreenWidth(screenSize)) /. 2.0;
-
-let doRotate = (gameStuff, env) =>
-  gameStuff.boardAngle == 0.0 ?
-    gameStuff :
-    {
-      let center = getCenter(screenSize);
-      Draw.translate(center, center, env);
-      Draw.rotate(EggUtils.degreesToRadians(gameStuff.boardAngle), env);
-      Draw.translate((-1.0) *. center, (-1.0) *. center, env);
-      gameStuff;
-    };
 
 
 let incrementPlayerFrame = (player: player): player => 
@@ -55,18 +34,42 @@ let incrementPlayerFrame = (player: player): player =>
     currentFrame: nextFrame(player.frames, player.currentFrame)
   };
 
+  let calcDrawAngle = (boardAngle: float): float => {
+    if (boardAngle > 270.0) {
+      270.0;
+    } else if (boardAngle > 180.0) {
+      180.0;
+    } else if (boardAngle > 90.0) {
+      90.0;
+    } else {
+      0.0;
+    };
+  };
+
+let changeAngle = (newAngle: float): float => {
+  if (newAngle > 360.0) {
+    newAngle -. 360.0;
+  } else if (newAngle < 0.0) {
+    newAngle +. 360.0;
+  } else {
+    newAngle;
+  };
+};
+
 let updateGameStuff = (gameStuff: gameStuff) => {
   {
     ...gameStuff,
-    boardAngle: gameStuff.boardAngle +. 0.1,
-    players: List.map(incrementPlayerFrame, gameStuff.players)
+    boardAngle: changeAngle(gameStuff.boardAngle -. 0.1),
+    players: List.map(incrementPlayerFrame, gameStuff.players),
+    drawAngle: calcDrawAngle(gameStuff.boardAngle)
   };
 };
+
 
 let draw = (gameStuff, env) => {
   let scale = getScreenScale(screenSize, boardSize);
   Draw.scale(scale, scale, env);
-  doRotate(gameStuff, env);
+  Render.doRotate(gameStuff, env);
   Render.clearBackground(env);
   Render.drawTiles(gameStuff, env);
   Render.drawPlayers(gameStuff, env);

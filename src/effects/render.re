@@ -2,6 +2,26 @@ open Reprocessing;
 open EggTypes;
 open EggConstants;
 
+let getScreenWidth = screenSize => {
+  let (width, _) = screenSize;
+  width;
+};
+
+let getCenter = screenSize : float =>
+  float_of_int(getScreenWidth(screenSize)) /. 2.0;
+
+let doRotate = (gameStuff, env) =>
+  gameStuff.boardAngle == 0.0 ?
+    gameStuff :
+    {
+      let center = getCenter(screenSize);
+      Draw.translate(center, center, env);
+      Draw.rotate(EggUtils.degreesToRadians(gameStuff.boardAngle), env);
+      Draw.translate((-1.0) *. center, (-1.0) *. center, env);
+      gameStuff;
+    };
+
+
 let rotateTransform = (x, y, tileSize, angleDegrees, env) => {
     Draw.pushMatrix(env);
     

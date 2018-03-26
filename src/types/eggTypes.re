@@ -31,9 +31,6 @@ type gameStuff = {
     players: list(player),
     playerImages: list(imageAsset),
     tileImages: list(imageAsset),
-    position: coords,
-    frames: int,
-    frame: int,
     boardAngle: float,
     drawAngle: float
 };
