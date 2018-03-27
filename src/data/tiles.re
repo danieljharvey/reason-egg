@@ -15,7 +15,8 @@ let createTile =
       ~x=0,
       ~y=0,
       ()
-    ): EggTypes.tile => {
+    )
+    : EggTypes.tile => {
   id,
   title,
   filename,
@@ -31,7 +32,13 @@ let createTile =
 };
 
 let tiles: list(EggTypes.tile) = [
-  createTile(~background=true, ~id=1, ~filename="tiles/sky.png", ~title="Sky", ()),
+  createTile(
+    ~background=true,
+    ~id=1,
+    ~filename="tiles/sky.png",
+    ~title="Sky",
+    ()
+  ),
   createTile(
     ~background=false,
     ~id=2,

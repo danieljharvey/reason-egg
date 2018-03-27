@@ -1,5 +1,7 @@
 open Reprocessing;
+
 open EggTypes;
+
 open EggConstants;
 
 let setup = env => {
@@ -26,25 +28,23 @@ let getScreenScale = (screenSize, boardSize) => {
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
-let incrementPlayerFrame = (player: player): player => 
-  {
-    ...player,
-    currentFrame: nextFrame(player.frames, player.currentFrame)
+let incrementPlayerFrame = (player: player) : player => {
+  ...player,
+  currentFrame: nextFrame(player.frames, player.currentFrame)
+};
+
+let calcDrawAngle = (boardAngle: float) : float =>
+  if (boardAngle > 270.0) {
+    270.0;
+  } else if (boardAngle > 180.0) {
+    180.0;
+  } else if (boardAngle > 90.0) {
+    90.0;
+  } else {
+    0.0;
   };
 
-  let calcDrawAngle = (boardAngle: float): float => {
-    if (boardAngle > 270.0) {
-      270.0;
-    } else if (boardAngle > 180.0) {
-      180.0;
-    } else if (boardAngle > 90.0) {
-      90.0;
-    } else {
-      0.0;
-    };
-  };
-
-let changeAngle = (newAngle: float): float => {
+let changeAngle = (newAngle: float) : float =>
   if (newAngle > 360.0) {
     newAngle -. 360.0;
   } else if (newAngle < 0.0) {
@@ -52,17 +52,13 @@ let changeAngle = (newAngle: float): float => {
   } else {
     newAngle;
   };
-};
 
 let updateGameStuff = (gameStuff: gameStuff) => {
-  {
-    ...gameStuff,
-    boardAngle: changeAngle(gameStuff.boardAngle -. 1.0),
-    players: List.map(incrementPlayerFrame, gameStuff.players),
-    drawAngle: calcDrawAngle(gameStuff.boardAngle)
-  };
+  ...gameStuff,
+  boardAngle: changeAngle(gameStuff.boardAngle -. 1.0),
+  players: List.map(incrementPlayerFrame, gameStuff.players),
+  drawAngle: calcDrawAngle(gameStuff.boardAngle)
 };
-
 
 let draw = (gameStuff, env) => {
   let scale = getScreenScale(screenSize, boardSize);
@@ -71,12 +67,10 @@ let draw = (gameStuff, env) => {
   Render.doRotate(gameStuff, env);
   Render.clearBackground(env);
   /*let offset = -1.0 *. (float_of_int(tileSize) /. 2.0);
-  Draw.translate(offset,offset, env);*/
+    Draw.translate(offset,offset, env);*/
   Render.drawTiles(gameStuff, env);
   Render.drawPlayers(gameStuff, env);
-
   Draw.popMatrix(env);
-  
   /*let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;*/
   updateGameStuff(gameStuff);
 };
