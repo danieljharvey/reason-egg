@@ -10,8 +10,8 @@
     "clean": "bsb -clean-world"
   },
   "dependencies": {
-    "Reprocessing": "schmavery/reprocessing",
-    "Reasongl": "bsansouci/reasongl"
+    "Reasongl": "bsansouci/reasongl",
+    "Reprocessing": "schmavery/reprocessing"
   },
   "devDependencies": {
     "bs-platform": "bsansouci/bsb-native#2.1.1"

@@ -20,11 +20,7 @@ let tiles = Tiles.tiles;
 
 let boardSize = List.length(Board.superBoard);
 
-let getScreenScale = (screenSize, boardSize) => {
-  let (width, _) = screenSize;
-  width / boardSize;
-  1.0;
-};
+
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
@@ -55,16 +51,16 @@ let changeAngle = (newAngle: float) : float =>
 
 let updateGameStuff = (gameStuff: gameStuff) => {
   ...gameStuff,
-  boardAngle: changeAngle(gameStuff.boardAngle -. 1.0),
+  boardAngle: changeAngle(gameStuff.boardAngle -. 1.1),
   players: List.map(incrementPlayerFrame, gameStuff.players),
   drawAngle: calcDrawAngle(gameStuff.boardAngle)
 };
 
 let draw = (gameStuff, env) => {
-  let scale = getScreenScale(screenSize, boardSize);
+  let scale = Render.getScreenScale(screenSize, boardSize);
   Draw.pushMatrix(env);
-  Draw.scale(scale, scale, env);
   Render.doRotate(gameStuff, env);
+  Draw.scale(scale, scale, env);
   Render.clearBackground(env);
   /*let offset = -1.0 *. (float_of_int(tileSize) /. 2.0);
     Draw.translate(offset,offset, env);*/
