@@ -4,6 +4,11 @@ open EggTypes;
 
 open EggConstants;
 
+let getScreenScale = (screenSize, boardSize) => {
+  let (width, _) = screenSize;
+  float_of_int(width) /. float_of_int(boardSize * EggConstants.tileSize);
+};
+
 let getScreenWidth = screenSize => {
   let (width, _) = screenSize;
   width;
@@ -17,7 +22,7 @@ let doRotate = (gameStuff, env) =>
     gameStuff :
     {
       let center = getCenter(screenSize);
-      Draw.translate(center, center, env);
+      Draw.translate(center, center , env);
       Draw.rotate(EggUtils.degreesToRadians(gameStuff.boardAngle), env);
       Draw.translate((-1.0) *. center, (-1.0) *. center, env);
       gameStuff;
