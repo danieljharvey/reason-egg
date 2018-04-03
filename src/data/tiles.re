@@ -31,6 +31,8 @@ let createTile =
   y
 };
 
+let idTile = createTile(());
+
 let tiles: list(EggTypes.tile) = [
   createTile(
     ~background=true,
@@ -109,13 +111,32 @@ let tiles: list(EggTypes.tile) = [
     ~filename="tiles/egg-cup.png",
     ~title="Egg Cup",
     ()
+  ),
+  createTile(
+    ~background=true,
+    ~collectable=100,
+    ~dontAdd=true,
+    ~frontLayer=true,
+    ~id=13,
+    ~filename="tiles/toast.png",
+    ~title="Toast",
+    ()
+  ),
+  createTile(
+    ~action="teleport",
+    ~background=true,
+    ~frontLayer=true,
+    ~id=14,
+    ~filename="tiles/door.png",
+    ~title="Door",
+    ()
   )
 ];
 
-let getTileByID = id => EggUtils.find(tile => tile.id === id, tiles);
+let getTileByID = (id) => EggUtils.find((tile: tile) => tile.id === id, tiles);
 
 let loadTileImages = env =>
-  List.map(tile => EggUtils.loadImage(env, tile.filename), tiles);
+  List.map((tile: tile) => EggUtils.loadImage(env, tile.filename), tiles);
 
 let getTileImageByID =
     (tileImages: list(imageAsset), filename: string)
@@ -131,32 +152,8 @@ let getTileImageByID =
 /*
 
 
-   {
-     action: "completeLevel",
-     background: true,
-     createPlayer: "egg",
-     frontLayer: true,
-     id: 12,
-     img: "egg-cup.png",
-     title: "Egg Cup"
-   },
-   {
-     background: true,
-     collectable: 100,
-     dontAdd: true,
-     frontLayer: true,
-     id: 13,
-     img: "toast.png",
-     title: "Toast"
-   },
-   {
-     action: "teleport",
-     background: true,
-     frontLayer: true,
-     id: 14,
-     img: "door.png",
-     title: "Door"
-   },
+
+
    {
      background: true,
      frontLayer: true,

@@ -53,7 +53,7 @@ let players: list(player) = [
   createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x: 6, y: 6}, ())
 ];
 
-let loadPlayerImages = env =>
+let loadPlayerImages = (players: list(player), env) =>
   List.map(
     (player: player) => EggUtils.loadImage(env, player.filename),
     players

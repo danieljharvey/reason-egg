@@ -88,17 +88,11 @@ let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
   ();
 };
 
-let perhapsDrawTile = (gameStuff: gameStuff, env, optionTile) => {
-  EggUtils.optionMap(
-    tile =>
-      switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
-      | Some(image) => drawTile(gameStuff, env, tile, image)
-      | _ => ()
-      },
-    optionTile
-  );
-  ();
-};
+let perhapsDrawTile = (gameStuff: gameStuff, env, tile: tile) => 
+  switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
+  | Some(image) => drawTile(gameStuff, env, tile, image)
+  | _ => ()
+  };
 
 let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
   switch (Tiles.getTileImageByID(gameStuff.playerImages, player.filename)) {
@@ -116,11 +110,11 @@ let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
 };
 
 let drawTiles = (gameStuff, env) => {
-  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), Board.superBoard);
+  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), gameStuff.board);
   gameStuff;
 };
 
 let drawPlayers = (gameStuff, env) =>
   List.iter(perhapsDrawPlayer(gameStuff, env), gameStuff.players);
 
-let clearBackground = env => Draw.background(Constants.black, env);
+let clearBackground = env => Draw.background(Constants.white, env);

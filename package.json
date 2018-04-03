@@ -1,6 +1,7 @@
 {
   "name": "reason-egg",
   "scripts": {
+    "go:native": "yarn build:native && yarn start:native",
     "start": "./lib/bs/bytecode/indexhot.byte",
     "start:native": "./lib/bs/native/index.native",
     "build": "bsb -make-world",

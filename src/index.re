@@ -4,23 +4,11 @@ open EggTypes;
 
 open EggConstants;
 
-let setup = env => {
+let setup = (env) => {
   let (width, height) = screenSize;
   Env.size(~width, ~height, env);
-  {
-    players: Player.players,
-    tileImages: Tiles.loadTileImages(env),
-    playerImages: Player.loadPlayerImages(env),
-    boardAngle: 0.0,
-    drawAngle: 0.0
-  };
+  Setup.setupEnvironment(Board.board, env);
 };
-
-let tiles = Tiles.tiles;
-
-let boardSize = List.length(Board.superBoard);
-
-
 
 let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
 
@@ -51,13 +39,13 @@ let changeAngle = (newAngle: float) : float =>
 
 let updateGameStuff = (gameStuff: gameStuff) => {
   ...gameStuff,
-  boardAngle: changeAngle(gameStuff.boardAngle -. 1.1),
+  /*boardAngle: changeAngle(gameStuff.boardAngle -. 1.1),*/
   players: List.map(incrementPlayerFrame, gameStuff.players),
   drawAngle: calcDrawAngle(gameStuff.boardAngle)
 };
 
-let draw = (gameStuff, env) => {
-  let scale = Render.getScreenScale(screenSize, boardSize);
+let drawGame = (gameStuff: gameStuff, env) => {
+  let scale = Render.getScreenScale(screenSize, gameStuff.boardSize);
   Draw.pushMatrix(env);
   Render.doRotate(gameStuff, env);
   Draw.scale(scale, scale, env);
@@ -69,6 +57,18 @@ let draw = (gameStuff, env) => {
   Draw.popMatrix(env);
   /*let newGameStuff = drawBird(gameStuff, env) |> incrementAngle;*/
   updateGameStuff(gameStuff);
+};
+
+let drawNothing = (gameStuff: gameStuff, env) => {
+  let clearBackground = env => Draw.background(Constants.white, env);
+  gameStuff;
+};
+
+let draw = (gameStuff: gameStuff, env) => {
+  switch gameStuff.gameState {
+  | Playing => drawGame(gameStuff, env)
+  | Loading => drawNothing(gameStuff, env)
+  };
 };
 
 run(~setup, ~draw, ());

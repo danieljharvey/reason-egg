@@ -18,3 +18,26 @@ let loadImage = (env, filename: string) : EggTypes.imageAsset => (
   filename,
   Draw.loadImage(~filename="assets/" ++ filename, ~isPixel=true, env)
 );
+
+let isNone = (item: option('a)): bool => 
+  switch (item) {
+    | None => true
+    | _ => false
+    };
+
+/* need an id function even though it won't get used */
+let sequence = (id: 'a, list: list(option('a))): option(list('a)) => {
+  let nothings = List.filter(isNone, list);
+  if (List.length(nothings) > 0) {
+    None;
+  } else {
+    Some(
+      List.map(item => switch item {
+      | Some(thing) => thing
+      | _ => id
+      }, list)
+    );
+  };
+};
+
+
