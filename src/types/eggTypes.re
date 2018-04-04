@@ -4,7 +4,9 @@ type imageAsset = (string, Reprocessing_Types.Types.imageT);
 
 type coords = {
   x: int,
-  y: int
+  y: int,
+  offsetX: int,
+  offsetY: int
 };
 
 type tile = {
@@ -57,4 +59,11 @@ type gameStuff = {
   board: board
 };
 
-
+type gameState = {
+  players: list(player),
+  board: board,
+  score: int,
+  rotations: int,
+  rotateAngle: float,
+  outcome: string
+};

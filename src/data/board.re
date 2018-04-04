@@ -29,3 +29,9 @@ let board = cleanBoard(createBoardFromIDs(idBoard));
 let getBoardTiles = (board: board): list(tile) => {
     List.concat(board);
 };
+
+let changeTile = (newTile: tile, board: board): board => 
+  List.mapi((y, row) => 
+    List.mapi((x, tile) => {
+      (x == newTile.x && y == newTile.y) ? newTile : tile
+    }, row), board);

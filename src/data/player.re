@@ -1,6 +1,6 @@
 open EggTypes;
 
-let defaultCoords: coords = {x: 0, y: 0};
+let defaultCoords: coords = {x: 0, y: 0, offsetX: 0, offsetY: 0};
 
 let createPlayer =
     (
@@ -46,12 +46,6 @@ let createPlayer =
   flying,
   movePattern
 };
-
-let players: list(player) = [
-  createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x: 2, y: 2}, ()),
-  createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x: 4, y: 4}, ()),
-  createPlayer(~filename="sprites/egg-rainbow.png", ~coords={x: 6, y: 6}, ())
-];
 
 let loadPlayerImages = (players: list(player), env) =>
   List.map(

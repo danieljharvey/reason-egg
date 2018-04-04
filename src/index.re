@@ -49,7 +49,7 @@ let drawGame = (gameStuff: gameStuff, env) => {
   Draw.pushMatrix(env);
   Render.doRotate(gameStuff, env);
   Draw.scale(scale, scale, env);
-  Render.clearBackground(env);
+  /*Render.clearBackground(env);*/
   /*let offset = -1.0 *. (float_of_int(tileSize) /. 2.0);
     Draw.translate(offset,offset, env);*/
   Render.drawTiles(gameStuff, env);
