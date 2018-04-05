@@ -6,24 +6,25 @@ open EggTypes;
 
 
   /*
-  protected checkNearlyFinished = (
-    gameState: GameState
-  ): Player[] => {
-    if (Utils.checkLevelIsCompleted(gameState)) {
-      return gameState.players.map(player => {
-        if (player.value > 0) {
-          const maybeNewPlayer = Utils.getPlayerType("rainbow-egg");
-          return maybeNewPlayer.map(newPlayer => {
-            return player.modify({
-              ...newPlayer
-            });
-          }).valueOr(player)
-        }
-        return player;
-      });
-    }
-    return gameState.players;
-  };
+let checkNearlyFinished = (
+  gameState: gameState
+): list(player) => {
+  if (Utils.checkLevelIsCompleted(gameState)) {
+    return gameState.players.map(player => {
+      if (player.value > 0) {
+        const maybeNewPlayer = Utils.getPlayerType("rainbow-egg");
+        return maybeNewPlayer.map(newPlayer => {
+          return player.modify({
+            ...newPlayer
+          });
+        }).valueOr(player)
+      }
+      return player;
+    });
+  }
+  return gameState.players;
+};
+
 */
 
 /* this rotates board and players it DOES NOT do animation - not our problem */
@@ -52,21 +53,7 @@ let doRotate = (gameState: gameState, clockwise: bool): gameState => {
   };
 };
 
-let doAction = (
-  gameState: gameState,
-  action: string,
-  timePassed: int
-): gameState => {
-  if (action === "rotateLeft") {
-    doRotate(gameState, false);
-  } else if (action === "rotateRight") {
-    doRotate(gameState, true);
-  } else if (action === "") {
-    doGameMove(gameState, timePassed);
-  } else {
-    gameState;
-  };
-};
+
 
 let doGameMove = (gameState: gameState, timePassed: int): gameState => {
   let startGameState = {
@@ -74,7 +61,7 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
     outcome: ""
   };
 
-  let newGameState = gameState;/*EggMovement.doCalcs(startGameState, timePassed);*/
+  let newGameState = EggMovement.doCalcs(startGameState, timePassed);
 
   let newerGameState = gameState; /*EggAction.checkAllPlayerTileActions(newGameState);*/
 
@@ -96,4 +83,20 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
     ...newerGameState,
     players: colouredPlayers
   }
+};
+
+let doAction = (
+  gameState: gameState,
+  action: string,
+  timePassed: int
+): gameState => {
+  if (action === "rotateLeft") {
+    doRotate(gameState, false);
+  } else if (action === "rotateRight") {
+    doRotate(gameState, true);
+  } else if (action === "") {
+    doGameMove(gameState, timePassed);
+  } else {
+    gameState;
+  };
 };

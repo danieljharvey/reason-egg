@@ -30,8 +30,15 @@ let getBoardTiles = (board: board): list(tile) => {
     List.concat(board);
 };
 
+/* replace a tile on the board, return new board */
 let changeTile = (newTile: tile, board: board): board => 
   List.mapi((y, row) => 
     List.mapi((x, tile) => {
       (x == newTile.x && y == newTile.y) ? newTile : tile
     }, row), board);
+
+/* get a tile on the board */
+let getTile = (x: int, y: int, board: board): option(tile) => {
+  let found = List.filter(tile => (tile.x == x && tile.y == y), getBoardTiles(board));
+  (List.length(found) > 0) ? Some(List.hd(found)) : None;
+};

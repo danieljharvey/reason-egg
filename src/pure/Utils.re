@@ -1,4 +1,29 @@
-import * as _ from "ramda";
+open EggTypes;
+
+let correctForOverflow = (
+    coords: coords,
+    boardSize: int
+  ): coords => {
+    
+  let newX = if (coords.x < 0) {
+    boardSize - 1;
+  } else if (coords.x >= boardSize) {
+    0;
+  } else {
+    coords.x;
+  };
+
+  let newY = if (coords.y < 0) {
+    boardSize - 1;
+  } else if (coords.y >= boardSize) {
+    0;
+  } else {
+    coords.y;
+  };
+  { ...coords, x: newX, y: newY };
+};
+
+/*import * as _ from "ramda";
 import { Board } from "../objects/Board";
 import { BoardSize } from "../objects/BoardSize";
 import { Coords } from "../objects/Coords";
@@ -68,29 +93,7 @@ export class Utils {
     return goodParams;
   }
 
-  public static correctForOverflow(
-    coords: Coords,
-    boardSize: BoardSize
-  ): Coords {
-    let newX;
-    let newY;
-    if (coords.x < 0) {
-      newX = boardSize.width - 1;
-    } else if (coords.x >= boardSize.width) {
-      newX = 0;
-    } else {
-      newX = coords.x;
-    }
-
-    if (coords.y < 0) {
-      newY = boardSize.height - 1;
-    } else if (coords.y >= boardSize.height) {
-      newY = 0;
-    } else {
-      newY = coords.y;
-    }
-    return coords.modify({ x: newX, y: newY });
-  }
+  
 
   public static flattenArray(arr: any[]) {
     return [].concat.apply([], arr);
@@ -168,4 +171,4 @@ export class Utils {
       playerType.value === value
     ))
   }
-}
+}*/

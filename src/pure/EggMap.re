@@ -17,10 +17,7 @@ export const calcBoardSize = (board: Board): number => {
   return board.getLength();
 };
 
-export const correctForOverflow = (board: Board, coords: Coords): Coords => {
-  const boardSize = calcBoardSize(board);
-  return Utils.correctForOverflow(coords, new BoardSize(boardSize));
-};
+
 
 // is intended next tile empty / a wall?
 // need to make this wrap around the board
@@ -163,6 +160,11 @@ export const switchTiles = (board: Board, id1, id2): Board => {
 };
 
 */
+
+let correctForOverflow = (board: board, coords: coords): coords => {
+  let boardSize = List.length(board);
+  Utils.correctForOverflow(coords, boardSize);
+};
 
 let getNewPlayerDirection = (direction: coords, clockwise: bool): coords => {
   if (direction.x !== 0 || direction.y !== 0) {
