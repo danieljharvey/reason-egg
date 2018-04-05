@@ -110,11 +110,11 @@ let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
 };
 
 let drawTiles = (gameStuff, env) => {
-  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), gameStuff.board);
+  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), gameStuff.gameState.board);
   gameStuff;
 };
 
 let drawPlayers = (gameStuff, env) =>
-  List.iter(perhapsDrawPlayer(gameStuff, env), gameStuff.players);
+  List.iter(perhapsDrawPlayer(gameStuff, env), gameStuff.gameState.players);
 
 let clearBackground = env => Draw.background(Constants.white, env);

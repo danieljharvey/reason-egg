@@ -2,6 +2,18 @@ open EggTypes;
 
 let offsetDivide: int = 100;
 
+let playerHasMoved = (
+  oldPlayer: player,
+  newPlayer: player
+): bool => {
+  (
+    oldPlayer.coords.x !== newPlayer.coords.x ||
+    oldPlayer.coords.y !== newPlayer.coords.y ||
+    oldPlayer.coords.offsetX !== newPlayer.coords.offsetX ||
+    oldPlayer.coords.offsetY !== newPlayer.coords.offsetY
+  )
+};
+
 /* work out whether player's location has moved since last go */
 let markPlayerAsMoved = (oldPlayer: player, newPlayer: player): player => {
   {
@@ -152,27 +164,20 @@ let calcMoveAmount = (
   (timePassed === 0) ? 0 : frameRateAdjusted;
 };
 
-/* this does the left/right moving, but does not care if walls are there as that is the responsibility of checkPlayerDirection */
-let incrementPlayerDirection = (timePassed: int, player: player): player => {
-
-  /*
-  if (player.falling) {
-    let fallAmount: int = calcMoveAmount(player.fallSpeed, timePassed);
-    let newOffsetY = player.coords.offsetX + fallAmount;
-    let newCoords = {
-      ...player.coords,
-      offsetY: player.coords.offsetY + fallAmount
-    };
-    {
-      ...player,
-      coords: newCoords
-    };
+let playerFalling = (timePassed: int, player: player): player => {
+  let fallAmount: int = calcMoveAmount(player.fallSpeed, timePassed);
+  let newOffsetY = player.coords.offsetX + fallAmount;
+  let newCoords = {
+    ...player.coords,
+    offsetY: player.coords.offsetY + fallAmount
   };
-
-  if (player.moveSpeed === 0 || player.stop !== false) {
-    player;
+  {
+    ...player,
+    coords: newCoords
   };
-  */
+};
+
+let playerRegularRolling = (timePassed: int, player: player): player => {
   let moveAmount = calcMoveAmount(player.moveSpeed, timePassed);
 
   let coords = player.coords;
@@ -181,28 +186,38 @@ let incrementPlayerDirection = (timePassed: int, player: player): player => {
 
   if (player.direction.x < 0) {
     /* move left */
-    let newOffsetX = coords.offsetX - moveAmount;
     {
       ...player,
       coords: {
         ...coords,
-        offsetX: newOffsetX
+        offsetX: coords.offsetX - moveAmount
       }
     };
   } else if (player.direction.x > 0) {
     /* move right */
-    let newOffsetX = coords.offsetX + moveAmount;
-
     {
       ...player,
       coords: {
         ...coords,
-        offsetX: newOffsetX
+        offsetX: coords.offsetX + moveAmount
       }
     };
   } else {
     player;
   };
+};
+/* this does the left/right moving, but does not care if walls are there as that is the responsibility of checkPlayerDirection */
+let incrementPlayerDirection = (timePassed: int, player: player): player => {
+
+  if (player.falling) {
+    playerFalling(timePassed, player);
+  } else if (player.moveSpeed === 0 || player.stop !== false) {
+    player;
+  } else {
+    playerRegularRolling(timePassed, player);
+  };
+
+  /* ALL THIS CORRECTION SHIT NEEDS IT'S OWN FUNCTION YO */
 
   /* if we've stopped and ended up not quite squared up, correct this */
   /*
@@ -435,17 +450,19 @@ let checkFloorBelowPlayer = (board: board, timePassed: int, player: player): pla
     { ...coords, y: coords.y + 1 }
   );
 
-  let tile = Board.getTile(belowCoords.x, belowCoords.y);
-
-  player;
-  /*
+  let tile = Board.getTile(belowCoords.x, belowCoords.y, board);
+  
   if (tile.background) {
-    // gap below, start falling down it
-    return player.modify({
+    /* gap below, start falling down it */
+    {
+      ...player,
       falling: true
-    });
+    };
+  } else {
+    player;
   }
-
+  
+  /*
   if (tile.get("breakable") === true && player.falling) {
     return player; // allow player to keep falling through breakable tile
   }
@@ -496,14 +513,22 @@ let getPlayerSpecificMoves = (
   (player.movePattern === "seek-egg") ? getSeekEggMoves(player, board, timePassed, players) : getEggMoves(player, board, timePassed);
 };
 
-let getCalcFunction = (
-  oldPlayer: player,
+let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
+
+let basicIncrementPlayerFrame = (player: player) : player => {
+  ...player,
+  currentFrame: nextFrame(player.frames, player.currentFrame)
+};
+
+let doPlayerCalcs = (
   board: board,
   timePassed: int,
   players: list(player),
   player: player
 ) => {
   
+  let oldPlayer = player;
+
   let playerSpecific = getPlayerSpecificMoves(
     oldPlayer,
     board,
@@ -516,28 +541,16 @@ let getCalcFunction = (
   |> playerSpecific
   |> correctPlayerOverflow(board)
   |> checkForMovementTiles(board)
-  |> markPlayerAsMoved(oldPlayer)
+  |> markPlayerAsMoved(oldPlayer);
 };
-
-
-let doPlayerCalcs = (
-  board: board,
-  timePassed: int,
-  players: list(player), player: player): player =>
-  getCalcFunction(player, board, timePassed, players)(player);
 
 let doCalcs = (
   gameState: gameState,
   timePassed: int
 ): gameState => {
-  let playerCalcs = doPlayerCalcs(
-    gameState.board,
-    timePassed,
-    gameState.players
-  );
   {
     ...gameState,
-    players: List.map(playerCalcs, gameState.players)
+    players: List.map(doPlayerCalcs(gameState.board, timePassed, gameState.players), gameState.players)
   };
 };
 /*
@@ -594,12 +607,7 @@ const getAllCoords = (players: Player[]): List<Coords> => {
 
 // works out whether Player has actually moved since last go
 // used to decide whether to do an action to stop static players hitting switches infinitely etc
-export const playerHasMoved = (
-  oldPlayer: Player,
-  newPlayer: Player
-): boolean => {
-  return !is(oldPlayer.coords, newPlayer.coords);
-};
+
 
 
 

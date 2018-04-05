@@ -48,16 +48,7 @@ type player = {
   movePattern: string
 };
 
-type gameStuff = {
-  players: list(player),
-  playerImages: list(imageAsset),
-  tileImages: list(imageAsset),
-  boardAngle: float,
-  drawAngle: float,
-  boardSize: int,
-  gameState: gameState,
-  board: board
-};
+type programState = Loading | Playing;
 
 type gameState = {
   players: list(player),
@@ -67,3 +58,13 @@ type gameState = {
   rotateAngle: float,
   outcome: string
 };
+
+type gameStuff = {
+  playerImages: list(imageAsset),
+  tileImages: list(imageAsset),
+  boardAngle: float,
+  drawAngle: float,
+  gameState: gameState,
+  programState
+};
+

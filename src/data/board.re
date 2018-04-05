@@ -38,7 +38,9 @@ let changeTile = (newTile: tile, board: board): board =>
     }, row), board);
 
 /* get a tile on the board */
-let getTile = (x: int, y: int, board: board): option(tile) => {
-  let found = List.filter(tile => (tile.x == x && tile.y == y), getBoardTiles(board));
-  (List.length(found) > 0) ? Some(List.hd(found)) : None;
+let getTile = (x: int, y: int, board: board): tile => {
+  let boardSize = List.length(board);
+  let nX = x mod boardSize;
+  let nY = y mod boardSize;
+  List.find(tile => (tile.x == nX && tile.y == nY), getBoardTiles(board));
 };
