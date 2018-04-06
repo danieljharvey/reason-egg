@@ -1,6 +1,6 @@
 open EggTypes;
 
-let offsetDivide: int = 100;
+let offsetDivide: int = 64;
 
 let playerHasMoved = (
   oldPlayer: player,
@@ -42,51 +42,56 @@ let checkForMovementTiles = (board: board, player: player): player => {
   player;
 };
 
-let correctTileOverflow = (coords: coords): coords => {
+let overflowingRight = (coords: coords) : bool => (
+  coords.offsetX >= offsetDivide
+);
 
-  /*
-  if (coords.offsetX >= offsetDivide) {
-    /* move one tile to right */
+let overflowingLeft = (coords: coords) : bool => (
+  coords.offsetX <= -1 * offsetDivide
+);
+
+let overflowingDown = (coords: coords) : bool => (
+  coords.offsetY >= offsetDivide
+);
+
+let overflowingUp = (coords: coords) : bool => (
+  coords.offsetY <= -1 * offsetDivide
+);
+
+let correctTileOverflow = (coords: coords): coords => {
+  if (overflowingRight(coords)) {
     {
       ...coords,
       offsetX: 0,
       x: coords.x + 1
     };
-  };
-
-  
-
-  if (coords.offsetX <= -1 * OFFSET_DIVIDE) {
-    // move one tile to left
-    return coords.modify({
+  } else if (overflowingLeft(coords)) {
+    {
+      ...coords,
       offsetX: 0,
       x: coords.x - 1
-    });
-  }
-
-  if (coords.offsetY >= OFFSET_DIVIDE) {
-    // move one tile down
-    return coords.modify({
+    };
+  } else if (overflowingDown(coords)) {  
+    {
+      ...coords,
       offsetY: 0,
       y: coords.y + 1
-    });
-  }
-
-  if (coords.offsetY <= -1 * OFFSET_DIVIDE) {
-    // move one tile up
-    return coords.modify({
+    };
+  } else if (overflowingUp(coords)) {
+    {
+      ...coords,
       offsetY: 0,
       y: coords.y - 1
-    });
-  }
-  */
-  coords;
+    };
+  } else {
+    coords;
+  };
 };
 
 let correctPlayerOverflow = (board: board, player: player): player => {
   let newCoords = correctTileOverflow(player.coords);
   let loopedCoords = EggMap.correctForOverflow(board, newCoords);
-
+  Js.log2("loopedCoords", loopedCoords);
   if (
     loopedCoords.x !== player.coords.x ||
     loopedCoords.y !== player.coords.y
@@ -455,20 +460,14 @@ let checkFloorBelowPlayer = (board: board, timePassed: int, player: player): pla
       ...player,
       falling: true
     };
-  } else {
+  } else if (tile.breakable && player.falling) {
     player;
-  }
-  
-  /*
-  if (tile.get("breakable") === true && player.falling) {
-    return player; // allow player to keep falling through breakable tile
-  }
-
-  // solid ground, stop falling
-  return player.modify({
-    falling: false
-  });
-  */
+  } else {
+    {
+      ...player,
+      falling: false
+    };
+  };
 };
 
 let getSeekEggMoves = (

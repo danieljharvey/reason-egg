@@ -53,7 +53,7 @@ let drawPlayer =
   let offset = (-1) * tileSize / 2;
   Draw.subImage(
     image,
-    ~pos=(offset + coords.offsetX, offset + coords.offsetY),
+    ~pos=(offset, offset),
     ~width=tileSize,
     ~height=tileSize,
     ~texPos=(texPosX, 0),
@@ -116,7 +116,7 @@ let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
 };
 
 let drawTiles = (gameStuff, env) => {
-  List.iter(List.iter(perhapsDrawTile(gameStuff, env)), gameStuff.gameState.board);
+  List.iter(perhapsDrawTile(gameStuff, env), Board.getBoardTiles(gameStuff.gameState.board));
   gameStuff;
 };
 
