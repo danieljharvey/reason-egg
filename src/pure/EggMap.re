@@ -19,12 +19,7 @@ export const calcBoardSize = (board: Board): number => {
 
 
 
-// is intended next tile empty / a wall?
-// need to make this wrap around the board
-export const checkTileIsEmpty = (board: Board, x, y): boolean => {
-  const tile = getTile(board, x, y);
-  return tile.background;
-};
+
 
 // find random tile of type that is NOT at currentCoords
 export const findTile = (board: Board, currentCoords: Coords, id): Tile => {
@@ -160,6 +155,11 @@ export const switchTiles = (board: Board, id1, id2): Board => {
 };
 
 */
+
+let checkTileIsEmpty = (x: int, y: int, board: board): bool => {
+  let tile = Board.getTile(x,y,board);
+  tile.background;
+};
 
 let correctForOverflow = (board: board, coords: coords): coords => {
   let boardSize = List.length(board);

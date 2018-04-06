@@ -105,53 +105,48 @@ let correctPlayerOverflow = (board: board, player: player): player => {
 
 };
 
+let playerTurningLeft = (player: player): bool => (
+  player.direction.x < 0 ||
+  player.oldDirection.x < 0 ||
+  player.direction.y < 0 ||
+  player.oldDirection.y < 0
+);
+
+let playerTurningRight = (player: player): bool => (
+  player.direction.x > 0 ||
+  player.oldDirection.x > 0 ||
+  player.direction.y > 0 ||
+  player.oldDirection.y > 0
+);
+
+let playerIsStill = (player: player): bool => (
+  player.direction.x === 0 &&
+  player.direction.y === 0 &&
+  player.currentFrame === 0
+);
+
 let incrementPlayerFrame = (player: player): player => {
-  /*
-  if (
-    player.direction.x === 0 &&
-    player.oldDirection.x === 0 &&
-    player.direction.y === 0 &&
-    player.oldDirection.y === 0 &&
-    player.currentFrame === 0
-  ) {
-    player;
+  
+  /* if going left, reduce frame */
+  let newFrame = if (playerTurningLeft(player)) {
+    (player.currentFrame > 0) ? player.currentFrame - 1 : player.frames - 1;
+  } else if (playerTurningRight(player)) {
+    (player.currentFrame >= player.frames - 1) ? 0 : player.currentFrame + 1;
+  } else {
+    player.currentFrame;
   };
 
-  if (
-    player.direction.x === 0 &&
-    player.direction.y === 0 &&
-    player.currentFrame === 0
-  ) {
+  if (playerIsStill(player)) {
     /* if we're still, and have returned to main frame, disregard old movement */
     {
       ...player,
       oldDirection: Player.defaultCoords
     };
-  };
-  */
-
-  /* if going left, reduce frame */
-  let newFrame = if (
-    player.direction.x < 0 ||
-    player.oldDirection.x < 0 ||
-    player.direction.y < 0 ||
-    player.oldDirection.y < 0
-  ) {
-    (player.currentFrame > 0) ? player.currentFrame - 1 : player.frames - 1;
-  } else if (
-    player.direction.x > 0 ||
-    player.oldDirection.x > 0 ||
-    player.direction.y > 0 ||
-    player.oldDirection.y > 0
-  ) {
-    (player.currentFrame == player.frames) ? 0 : player.currentFrame + 1;
   } else {
-    player.currentFrame;
-  };
-
-  {
-    ...player,
-    currentFrame: newFrame
+    {
+      ...player,
+      currentFrame: newFrame
+    };
   };
 };
 
@@ -159,13 +154,15 @@ let calcMoveAmount = (
   moveSpeed: int,
   timePassed: int
 ): int => {
-  let moveAmount: int = 1 / offsetDivide * moveSpeed * 5;
-  let frameRateAdjusted: int = moveAmount * timePassed;
+  let moveAmount: float = 1. /. float_of_int(offsetDivide) *.  float_of_int(moveSpeed) *. 5.;
+  let frameRateAdjusted: int = int_of_float(moveAmount *. float_of_int(timePassed));
   (timePassed === 0) ? 0 : frameRateAdjusted;
 };
 
 let playerFalling = (timePassed: int, player: player): player => {
+  
   let fallAmount: int = calcMoveAmount(player.fallSpeed, timePassed);
+  
   let newOffsetY = player.coords.offsetX + fallAmount;
   let newCoords = {
     ...player.coords,
@@ -291,30 +288,36 @@ let incrementPlayerDirection = (timePassed: int, player: player): player => {
   /* player; */
 };
 
+let playerIsTrapped = (board: board, player: player): bool => (
+  player.direction.x !== 0 &&
+  player.falling === false &&
+  !EggMap.checkTileIsEmpty(player.coords.x - 1, player.coords.y, board) &&
+  !EggMap.checkTileIsEmpty(player.coords.x + 1, player.coords.y, board)
+);
+
+let playerCanGoLeft = (board: board, player: player): bool => (
+  player.direction.x < 0 &&
+    player.falling === false && 
+    !EggMap.checkTileIsEmpty(player.coords.x - 1, player.coords.y, board)
+);
+
+let playerCanGoRight = (board: board, player: player): bool => (
+  player.direction.x > 0 && 
+    player.falling === false && 
+    !EggMap.checkTileIsEmpty(player.coords.x + 1, player.coords.y, board)
+);
+
 let checkStandardPlayerDirection = (board: board, player: player): player => {
-  let coords = player.coords;
-  /*
-  if (
-    player.direction.x !== 0 &&
-    player.falling === false &&
-    !Map.checkTileIsEmpty(board, coords.x - 1, coords.y) &&
-    !Map.checkTileIsEmpty(board, coords.x + 1, coords.y)
-  ) {
+  if (playerIsTrapped(board, player)) {
     {
       ...player,
       stop: true
     };
-  };
-
-  if (
-    player.direction.x < 0 &&
-    player.falling === false && 
-    !Map.checkTileIsEmpty(board, coords.x - 1, coords.y)
-  ) {
+  } else if (playerCanGoLeft(board, player)) {
     {
       ...player,
       coords: {
-        ...coords,
+        ...player.coords,
         offsetX: 0
       },
       direction: {
@@ -323,17 +326,11 @@ let checkStandardPlayerDirection = (board: board, player: player): player => {
       },
       stop: false
     };
-  };
-
-  if (
-    player.direction.x > 0 && 
-    player.falling === false && 
-    !Map.checkTileIsEmpty(board, coords.x + 1, coords.y)
-  ) {
+  } else if (playerCanGoRight(board, player)) {
     {
       ...player,
       coords: {
-        ...coords,
+        ...player.coords,
         offsetX: 0
       },
       direction: {
@@ -342,12 +339,12 @@ let checkStandardPlayerDirection = (board: board, player: player): player => {
       },
       stop: false
     };
-  };
-  */
-  {
-    ...player,
-    stop: false
-  };
+  } else {
+    {
+      ...player,
+      stop: false
+    };
+  };  
 };
 
 
@@ -513,13 +510,6 @@ let getPlayerSpecificMoves = (
   (player.movePattern === "seek-egg") ? getSeekEggMoves(player, board, timePassed, players) : getEggMoves(player, board, timePassed);
 };
 
-let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
-
-let basicIncrementPlayerFrame = (player: player) : player => {
-  ...player,
-  currentFrame: nextFrame(player.frames, player.currentFrame)
-};
-
 let doPlayerCalcs = (
   board: board,
   timePassed: int,
@@ -527,10 +517,8 @@ let doPlayerCalcs = (
   player: player
 ) => {
   
-  let oldPlayer = player;
-
   let playerSpecific = getPlayerSpecificMoves(
-    oldPlayer,
+    player,
     board,
     timePassed,
     players
@@ -541,7 +529,7 @@ let doPlayerCalcs = (
   |> playerSpecific
   |> correctPlayerOverflow(board)
   |> checkForMovementTiles(board)
-  |> markPlayerAsMoved(oldPlayer);
+  |> markPlayerAsMoved(player);
 };
 
 let doCalcs = (
@@ -602,12 +590,6 @@ const getAllCoords = (players: Player[]): List<Coords> => {
       })
   );
 };
-
-
-
-// works out whether Player has actually moved since last go
-// used to decide whether to do an action to stop static players hitting switches infinitely etc
-
 
 
 
