@@ -41,14 +41,13 @@ let rotateTransform = (coords: coords, tileSize, angleDegrees, env) => {
 let drawPlayer =
     (
       env,
-      coords: EggTypes.coords,
-      frame: int,
+      player: player,
       imageAsset: imageAsset,
       drawAngle: float
     ) => {
-  let texPosX = frame * tileSize;
+  let texPosX = player.currentFrame * tileSize;
   Draw.pushMatrix(env);
-  rotateTransform(coords, tileSize, (-1.0) *. drawAngle, env);
+  rotateTransform(player.coords, tileSize, (-1.0) *. drawAngle, env);
   let (_, image) = imageAsset;
   let offset = (-1) * tileSize / 2;
   Draw.subImage(
@@ -95,32 +94,102 @@ let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
 };
 
 let perhapsDrawTile = (gameStuff: gameStuff, env, tile: tile) => 
-  switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
-  | Some(image) => drawTile(gameStuff, env, tile, image)
-  | _ => ()
-  };
+  EggUtils.optionMap(
+    image => drawTile(gameStuff, env, tile, image),
+    Tiles.getTileImageByID(gameStuff.tileImages, tile.filename));
 
-let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
-  switch (Tiles.getTileImageByID(gameStuff.playerImages, player.filename)) {
-  | Some(image) =>
-    drawPlayer(
-      env,
-      player.coords,
-      player.currentFrame,
-      image,
-      gameStuff.drawAngle
-    )
-  | _ => ()
+let fallingOffLeft = (coords: coords): bool => (
+  coords.x === 0 && coords.offsetX < 0
+);
+
+let fallingOffRight= (boardSize: int, coords: coords): bool => (
+  coords.x >= (boardSize -1) && coords.offsetX > 0
+);
+
+let fallingOffTop = (coords: coords): bool => (
+  coords.y === 0 && coords.offsetY < 0
+);
+
+let fallingOffBottom= (boardSize: int, coords: coords): bool => (
+  coords.y >= (boardSize -1) && coords.offsetY > 0
+);
+
+let drawShadowPlayer = 
+(
+  env,
+  player: player,
+  imageAsset: imageAsset,
+  drawAngle: float,
+  boardSize: int
+) => {
+  if (fallingOffLeft(player.coords)) {
+    let shadowPlayer = {
+      ...player,
+      coords: {
+        ...player.coords,
+        x: player.coords.x + boardSize
+      }
+    };
+    drawPlayer(env, shadowPlayer, imageAsset, drawAngle)
+  } else if (fallingOffRight(boardSize, player.coords)) {
+    let shadowPlayer = {
+      ...player,
+      coords: {
+        ...player.coords,
+        x: -1
+      }
+    };
+    drawPlayer(env, shadowPlayer, imageAsset, drawAngle);
+  } else if (fallingOffTop(player.coords)) {
+    let shadowPlayer = {
+      ...player,
+      coords: {
+        ...player.coords,
+        y: player.coords.y + boardSize
+      }
+    };
+    drawPlayer(env, shadowPlayer, imageAsset, drawAngle);
+  } else if (fallingOffBottom(boardSize, player.coords)) {
+    let shadowPlayer = {
+      ...player,
+      coords: {
+        ...player.coords,
+        y: -1
+      }
+    };
+    drawPlayer(env, shadowPlayer, imageAsset, drawAngle);
   };
   ();
 };
 
+
+let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
+  EggUtils.optionMap(image =>
+    {
+      drawPlayer(
+        env,
+        player,
+        image,
+        gameStuff.drawAngle
+      );
+      drawShadowPlayer(
+        env,
+        player,
+        image,
+        gameStuff.drawAngle,
+        List.length(gameStuff.gameState.board)
+      );
+    },
+    Tiles.getTileImageByID(gameStuff.playerImages, player.filename)
+  );
+};
+
 let drawTiles = (gameStuff, env) => {
-  List.iter(perhapsDrawTile(gameStuff, env), Board.getBoardTiles(gameStuff.gameState.board));
+  List.map(perhapsDrawTile(gameStuff, env), Board.getBoardTiles(gameStuff.gameState.board));
   gameStuff;
 };
 
 let drawPlayers = (gameStuff, env) =>
-  List.iter(perhapsDrawPlayer(gameStuff, env), gameStuff.gameState.players);
+  List.map(perhapsDrawPlayer(gameStuff, env), gameStuff.gameState.players);
 
 let clearBackground = env => Draw.background(Constants.white, env);

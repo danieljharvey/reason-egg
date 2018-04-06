@@ -40,7 +40,7 @@ let changeAngle = (newAngle: float) : float =>
 
 let updateGameStuff = (gameStuff: gameStuff) => {
   ...gameStuff,
-  gameState: EggGame.doAction(gameStuff.gameState, "", 5),
+  gameState: EggGame.doAction(gameStuff.gameState, "", 10),
   drawAngle: calcDrawAngle(gameStuff.boardAngle)
 };
 

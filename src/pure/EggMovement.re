@@ -91,7 +91,6 @@ let correctTileOverflow = (coords: coords): coords => {
 let correctPlayerOverflow = (board: board, player: player): player => {
   let newCoords = correctTileOverflow(player.coords);
   let loopedCoords = EggMap.correctForOverflow(board, newCoords);
-  Js.log2("loopedCoords", loopedCoords);
   if (
     loopedCoords.x !== player.coords.x ||
     loopedCoords.y !== player.coords.y
