@@ -11,6 +11,9 @@ let find = (f, list) => {
   List.length(found) === 0 ? None : Some(List.hd(found));
 };
 
+let randomFromList = (list: list('a)) : 'a => 
+  List.nth(list, Random.int(List.length(list)));
+
 let degreesToRadians = (degrees: float) : float =>
   degrees /. 360.0 *. Constants.two_pi;
 

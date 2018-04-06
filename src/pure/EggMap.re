@@ -21,23 +21,7 @@ export const calcBoardSize = (board: Board): number => {
 
 
 
-// find random tile of type that is NOT at currentCoords
-export const findTile = (board: Board, currentCoords: Coords, id): Tile => {
-  const tiles = board.getAllTiles();
-  const teleporters = tiles.filter(tile => {
-    if (tile.x === currentCoords.x && tile.y === currentCoords.y) {
-      return false;
-    }
-    return tile.id === id;
-  });
-  if (teleporters.size === 0) {
-    return null;
-  }
-  const chosenID = Math.floor(Math.random() * teleporters.size);
 
-  const newTile = teleporters.get(chosenID); // this is an Immutable list so needs to use their functions
-  return newTile;
-};
 
 export const shrinkBoard = (board: Board): Board => {
   const boardSize = new BoardSize(board.getLength());
@@ -155,6 +139,19 @@ export const switchTiles = (board: Board, id1, id2): Board => {
 };
 
 */
+
+/* find random tile of type that is NOT at currentCoords */
+let findTile = (board: board, currentCoords: coords, id: int): option(tile) => {
+  let teleporters = List.filter(tile => {
+    (tile.x === currentCoords.x && tile.y === currentCoords.y) ? false : tile.id === id
+  }, Board.getBoardTiles(board));
+
+  if (List.length(teleporters) === 0) {
+    None;
+  } else {
+    Some(EggUtils.randomFromList(teleporters));
+  };
+};
 
 let checkTileIsEmpty = (x: int, y: int, board: board): bool => {
   let tile = Board.getTile(x,y,board);

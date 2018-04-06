@@ -22,25 +22,48 @@ let markPlayerAsMoved = (oldPlayer: player, newPlayer: player): player => {
   };
 };
 
-let checkForMovementTiles = (board: board, player: player): player => {
-  let currentCoords = player.coords;
+let playerJustTeleported = (player: player) : bool => (
+  player.lastAction === "teleport"
+);
 
-  /*
-  if (currentCoords.offsetX !== 0 || currentCoords.offsetY !== 0) {
-    return player;
+/* find another teleport and go to it
+// if no others, do nothing */
+let teleport = (board: board, player: player): player => {
+  if (!playerJustTeleported(player)) {
+    let newTile = EggMap.findTile(board, player.coords, 14);
+    switch (newTile) {
+      | Some(tile) => {
+        ...player,
+        coords: {
+          ...player.coords,
+          x: tile.x,
+          y: tile.y
+        },
+        lastAction: "teleport"
+      }
+      | _ => player
+    };
+  } else {
+    player;
   }
-
-  const coords = Map.correctForOverflow(board, currentCoords);
-
-  const tile = board.getTile(coords.x, coords.y);
-
-  if (tile.action === "teleport") {
-    return teleport(board)(player);
-  }
-  */
-
-  player;
 };
+
+
+let playerIsMidMove = (coords: coords) : bool => (
+  coords.offsetX !== 0 || coords.offsetY !== 0
+);
+
+let doMovementTiles = (board: board, player: player): player => {
+  let tile = Board.getTile(player.coords.x, player.coords.y, board);
+  if (tile.action === "teleport") {
+    teleport(board, player);
+  } else {
+    player;
+  }
+};
+
+let checkForMovementTiles = (board: board, player: player): player => 
+  (playerIsMidMove(player.coords)) ? player : doMovementTiles(board, player);
 
 let overflowingRight = (coords: coords) : bool => (
   coords.offsetX >= offsetDivide
