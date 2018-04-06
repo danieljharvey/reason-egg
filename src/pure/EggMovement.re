@@ -614,33 +614,4 @@ const getAllCoords = (players: Player[]): List<Coords> => {
 
 
 
-// find another teleport and go to it
-// if no others, do nothing
-export const teleport = (board: Board) => (player: Player): Player => {
-  if (player.lastAction === "teleport") {
-    return player;
-  }
-  const newTile = Map.findTile(board, player.coords, 14);
-  if (newTile) {
-    return player.modify({
-      coords: player.coords.modify({
-        x: newTile.x,
-        y: newTile.y
-      }),
-      lastAction: "teleport"
-    });
-  }
-  return player;
-};
-
-
-
-
-
-
-
-
-
-
-
 */
