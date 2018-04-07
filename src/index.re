@@ -45,30 +45,20 @@ let updateGameStuff = (gameStuff: gameStuff) => {
   drawAngle: calcDrawAngle(gameStuff.boardAngle)
 };
 
-let drawGame = (gameStuff: gameStuff, env) => {
-  let boardSize = List.length(gameStuff.gameState.board);
-  let scale = Render.getScreenScale(screenSize, boardSize);
-  Draw.pushMatrix(env);
-  Render.doRotate(gameStuff, env);
-  Draw.scale(scale, scale, env);
-  Render.clearBackground(env);
-
-  Render.drawTiles(gameStuff, env);
-  Render.drawPlayers(gameStuff, env);
-  
-  Draw.popMatrix(env);
+let drawGame = (env, gameStuff: gameStuff) => {
+  Render.render(env, gameStuff);
   updateGameStuff(gameStuff);
 };
 
-let drawNothing = (gameStuff: gameStuff, env) => {
-  let clearBackground = env => Draw.background(Constants.white, env);
+let drawNothing = (env, gameStuff: gameStuff) => {
+  Draw.background(Constants.white, env);
   gameStuff;
 };
 
 let draw = (gameStuff: gameStuff, env) => {
   switch gameStuff.programState {
-  | Playing => drawGame(gameStuff, env)
-  | Loading => drawNothing(gameStuff, env)
+  | Playing => drawGame(env, gameStuff)
+  | Loading => drawNothing(env, gameStuff)
   };
 };
 

@@ -1,10 +1,6 @@
 open EggTypes;
 
-let isEggCup = (tile: tile): bool => {
-    tile.action === "completeLevel"
-};
-
-let createPlayer = (x: int, y: int, playerType: string) : option(player) => {
+let createPlayer = (x: int, y: int, playerType: playerType) : option(player) => {
     let coords = { ...Player.defaultCoords, x, y };
     let direction = {
         ...Player.defaultCoords,
@@ -16,18 +12,17 @@ let createPlayer = (x: int, y: int, playerType: string) : option(player) => {
             coords,  
             direction   
         }
-    }, Player.getPlayerByType("egg"));
+    }, Player.getPlayerByType(playerType));
 };
 
 let createPlayers = (board: board): list(player) => {
-    let eggCups = List.filter(isEggCup, Board.getBoardTiles(board));
     List.fold_right((tile: tile, players: list(player)) => {
-        let optPlayer = createPlayer(tile.x, tile.y, "egg");
+        let optPlayer = createPlayer(tile.x, tile.y, tile.createPlayer);
         switch (optPlayer) {
         | Some(player) => List.append(players, [player])
         | _ => players
         }
-    }, eggCups, []);
+    }, Board.getBoardTiles(board), []);
 };
 
 let defaultGameState = (board: board): gameState => {

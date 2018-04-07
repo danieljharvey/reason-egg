@@ -22,9 +22,17 @@ let doRotate = (gameStuff, env) =>
     gameStuff :
     {
       let center = getCenter(screenSize);
-      Draw.translate(center, center , env);
+      Draw.translate(
+        ~x=center,
+        ~y=center,
+        env
+      );
       Draw.rotate(EggUtils.degreesToRadians(gameStuff.boardAngle), env);
-      Draw.translate((-1.0) *. center, (-1.0) *. center, env);
+      Draw.translate(
+        ~x=(-1.0) *. center,
+        ~y=(-1.0) *. center,
+        env
+      );
       gameStuff;
     };
 
@@ -33,7 +41,10 @@ let rotateTransform = (coords: coords, tileSize, angleDegrees, env) => {
   let top = (coords.y * tileSize) + coords.offsetY;
   let middleLeft = float_of_int(left + tileSize / 2);
   let middleTop = float_of_int(top + tileSize / 2);
-  Draw.translate(middleLeft, middleTop, env);
+  Draw.translate(
+    ~x=middleLeft,
+    ~y=middleTop,env
+  );
   Draw.rotate(EggUtils.degreesToRadians(angleDegrees), env);
   env;
 };
@@ -192,4 +203,19 @@ let drawTiles = (gameStuff, env) => {
 let drawPlayers = (gameStuff, env) =>
   List.map(perhapsDrawPlayer(gameStuff, env), gameStuff.gameState.players);
 
-let clearBackground = env => Draw.background(Constants.white, env);
+let clearBackground = env => Draw.background(Constants.black, env);
+
+let render = (env, gameStuff: gameStuff) => {
+  let boardSize = List.length(gameStuff.gameState.board);
+  let scale = getScreenScale(screenSize, boardSize);
+
+  Draw.pushMatrix(env);
+  doRotate(gameStuff, env) |> ignore;
+  Draw.scale(~x=scale, ~y=scale, env);
+  clearBackground(env);
+
+  drawTiles(gameStuff, env) |> ignore;
+  drawPlayers(gameStuff, env) |> ignore;
+  
+  Draw.popMatrix(env);
+};

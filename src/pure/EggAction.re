@@ -43,44 +43,41 @@ let checkPlayerTileAction = (
     };
   } else {
     let tile = Board.getTile(player.coords.x, player.coords.y, board);
+    switch (tile.action) {
+      | Collectable(a) => {
+        let newScore = a * player.multiplier;
+        let newTile = {
+          ...Tiles.blankTile,
+          x: player.coords.x,
+          y: player.coords.y
+        };
 
-    if (tile.collectable > 0) {
-      let newScore = tile.collectable * player.multiplier;
-      let newTile = {
-        ...Tiles.blankTile,
-        x: player.coords.x,
-        y: player.coords.y
-      };
-
-      {
-        board: Board.changeTile(board, newTile),
-        outcome,
-        score: score + newScore
-      };
-    } else if (tile.action === "completeLevel") {
-      {
+        {
+          board: Board.changeTile(board, newTile),
+          outcome,
+          score: score + newScore
+        };
+      }
+      | CompleteLevel =>  {
         board,
         outcome: "completeLevel",
         score
-      };
-    } else if (tile.action === "pink-switch") {
-      {
+      }
+      | PinkSwitch =>  {
         board: EggMap.switchTiles(15, 16, board),
         outcome,
         score
-      };
-    } else if (tile.action === "green-switch") {
-      {
+      }
+      | GreenSwitch => {
         board: EggMap.switchTiles(18, 19, board),
-        outcome,
-        score
-      };
-    } else {
-      {
+          outcome,
+          score
+      }
+      | _ => {
         board,
         outcome,
         score
-      };
+      }
     };
   };
 };

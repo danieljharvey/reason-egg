@@ -55,11 +55,10 @@ let playerIsMidMove = (coords: coords) : bool => (
 
 let doMovementTiles = (board: board, player: player): player => {
   let tile = Board.getTile(player.coords.x, player.coords.y, board);
-  if (tile.action === "teleport") {
-    teleport(board, player);
-  } else {
-    player;
-  }
+  switch (tile.action) {
+  | Teleport => teleport(board, player);
+  | _ => player
+  };
 };
 
 let checkForMovementTiles = (board: board, player: player): player => 

@@ -1,42 +1,10 @@
 open EggTypes;
 
-let createTile =
-    (
-      ~action="",
-      ~background=false,
-      ~breakable=false,
-      ~collectable=0,
-      ~createPlayer="",
-      ~dontAdd=false,
-      ~frontLayer=false,
-      ~id=0,
-      ~filename="",
-      ~title="",
-      ~x=0,
-      ~y=0,
-      ()
-    )
-    : EggTypes.tile => {
-  id,
-  title,
-  filename,
-  background,
-  frontLayer,
-  collectable,
-  breakable,
-  action,
-  dontAdd,
-  createPlayer,
-  x,
-  y
-};
-
 let idTile: tile = {
-  action: "",
+  action: NoAction,
   background: false,
   breakable: false,
-  collectable: 0,
-  createPlayer: "",
+  createPlayer: Nope,
   dontAdd: false,
   frontLayer: false,
   id: 0,
@@ -64,7 +32,7 @@ let tiles: list(EggTypes.tile) = [
   {
     ...idTile,
     background: true,
-    collectable: 1,
+    action: Collectable(1),
     frontLayer: true,
     id: 3,
     filename: "tiles/cacti.png",
@@ -73,7 +41,7 @@ let tiles: list(EggTypes.tile) = [
   {
     ...idTile,
     background: true,
-    collectable: 10,
+    action: Collectable(10),
     frontLayer: true,
     id: 4,
     filename: "tiles/plant.png",
@@ -117,9 +85,9 @@ let tiles: list(EggTypes.tile) = [
   },
   {
     ...idTile,
-    action: "completeLevel",
+    action: CompleteLevel,
     background: true,
-    createPlayer: "egg",
+    createPlayer: Egg,
     frontLayer: true,
     id: 12,
     filename: "tiles/egg-cup.png",
@@ -128,7 +96,7 @@ let tiles: list(EggTypes.tile) = [
   {
     ...idTile,
     background: true,
-    collectable: 100,
+    action: Collectable(100),
     dontAdd: true,
     frontLayer: true,
     id: 13,
@@ -137,7 +105,7 @@ let tiles: list(EggTypes.tile) = [
   },
   {
     ...idTile,
-    action: "teleport",
+    action: Teleport,
     background: true,
     frontLayer: true,
     id: 14,
@@ -161,7 +129,7 @@ let tiles: list(EggTypes.tile) = [
   },
   {
     ...idTile,
-    action: "pink-switch",
+    action: PinkSwitch,
     background: true,
     frontLayer: true,
     id: 17,
@@ -185,7 +153,7 @@ let tiles: list(EggTypes.tile) = [
   },
   {
     ...idTile,
-    action: "green-switch",
+    action: GreenSwitch,
     background: true,
     frontLayer: true,
     id: 20,
@@ -195,7 +163,7 @@ let tiles: list(EggTypes.tile) = [
   {
     ...idTile,
     background: true,
-    createPlayer: "silver-egg",
+    createPlayer: SilverEgg,
     frontLayer: true,
     id: 21,
     filename: "tiles/silver-egg-cup.png",
@@ -204,7 +172,7 @@ let tiles: list(EggTypes.tile) = [
   {
     ...idTile,
     background: true,
-    createPlayer: "blade",
+    createPlayer: Blade,
     frontLayer: true,
     id: 22,
     filename: "tiles/blade-egg-cup.png",
@@ -213,7 +181,7 @@ let tiles: list(EggTypes.tile) = [
   {
     ...idTile,
     background: true,
-    createPlayer: "find-blade",
+    createPlayer: FindBlade,
     frontLayer: true,
     id: 23,
     filename: "tiles/find-blade-egg-cup.png",
@@ -223,7 +191,7 @@ let tiles: list(EggTypes.tile) = [
     ...idTile,
     background: true,
     id: 24,
-    action: "split-eggs",
+    action: SplitEggs,
     frontLayer: true,
     filename: "tiles/egg-splitter.png",
     title: "It is the egg splitter"
