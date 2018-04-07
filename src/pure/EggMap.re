@@ -115,30 +115,20 @@ export const getRandomTile = (tiles): Tile => {
   return randomProperty(tiles);
 };
 
-// swap two types of tiles on map (used by pink/green switching door things)
-export const switchTiles = (board: Board, id1, id2): Board => {
-  const tiles = board.getAllTiles();
-  return tiles.reduce((currentBoard, tile) => {
-    if (tile.id === id1) {
-      const newTile = cloneTile(id2);
-      const positionTile = newTile.modify({
-        x: tile.x,
-        y: tile.y
-      });
-      return currentBoard.modify(tile.x, tile.y, positionTile);
-    } else if (tile.id === id2) {
-      const newTile = cloneTile(id1);
-      const positionTile = newTile.modify({
-        x: tile.x,
-        y: tile.y
-      });
-      return currentBoard.modify(tile.x, tile.y, positionTile);
-    }
-    return currentBoard;
-  }, board);
-};
-
 */
+
+/* swap two types of tiles on map (used by pink/green switching door things) */
+let switchTiles = (id1: int, id2: int, board: board): board => {
+  List.fold_right((tile: tile, currentBoard: board) => {
+    if (tile.id === id1) {
+      Board.changeTileByID(board, tile.x, tile.y, id2);
+    } else if (tile.id === id2) {
+      Board.changeTileByID(board, tile.x, tile.y, id1);
+    } else {
+      currentBoard;
+    };
+  }, Board.getBoardTiles(board), board);
+};
 
 /* find random tile of type that is NOT at currentCoords */
 let findTile = (board: board, currentCoords: coords, id: int): option(tile) => {
@@ -237,7 +227,7 @@ let rotateBoard = (board: board, clockwise: bool): board => {
       x: newCoords.x,
       y: newCoords.y
     };
-    Board.changeTile(newTile, currentBoard);
+    Board.changeTile(currentBoard,newTile);
   }, tiles, board);
 
   rotatedBoard;

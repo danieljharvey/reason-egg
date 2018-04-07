@@ -133,7 +133,9 @@ let tiles: list(EggTypes.tile) = [
   )
 ];
 
-let getTileByID = (id) => EggUtils.find((tile: tile) => tile.id === id, tiles);
+let blankTile = List.hd(tiles);
+
+let getTileByID = (id: int) => EggUtils.find((tile: tile) => tile.id === id, tiles);
 
 let loadTileImages = env =>
   List.map((tile: tile) => EggUtils.loadImage(env, tile.filename), tiles);

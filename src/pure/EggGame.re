@@ -62,11 +62,11 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
   };
 
   let newGameState = EggMovement.doCalcs(startGameState, timePassed);
-
-  newGameState;
+  
+  let newerGameState = EggAction.checkAllPlayerTileActions(newGameState);
+  
+  newerGameState;
   /*
-  let newerGameState = newGameState; /*EggAction.checkAllPlayerTileActions(newGameState);*/
-
   let sortedPlayers = gameState.players; /*EggCollision.checkAllCollisions(newerGameState.players);*/
 
   let splitPlayers = sortedPlayers; /*BoardCollisions.checkBoardCollisions(

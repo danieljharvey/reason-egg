@@ -31,7 +31,7 @@ let getBoardTiles = (board: board): list(tile) => {
 };
 
 /* replace a tile on the board, return new board */
-let changeTile = (newTile: tile, board: board): board => 
+let changeTile = (board: board, newTile: tile): board => 
   List.mapi((x, row) => 
     List.mapi((y, tile) => {
       (x == newTile.x && y == newTile.y) ? newTile : tile
@@ -43,4 +43,19 @@ let getTile = (x: int, y: int, board: board): tile => {
   let nX = (x + boardSize) mod boardSize;
   let nY = (y + boardSize) mod boardSize;
   List.find(tile => (tile.x == nX && tile.y == nY), getBoardTiles(board));
+};
+
+let changeTileByID = (board: board, x: int, y: int, id: int): board => {
+  let newTile = Tiles.getTileByID(id);
+  switch newTile {
+  | Some(tile) => {
+    let positionTile = {
+      ...tile,
+      x: x,
+      y: y
+    };
+    changeTile(board, positionTile);
+  }
+  | _ => board
+  };
 };
