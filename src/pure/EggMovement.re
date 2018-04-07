@@ -553,8 +553,8 @@ let doPlayerCalcs = (
 };
 
 let doCalcs = (
-  gameState: gameState,
-  timePassed: int
+  timePassed: int,  
+  gameState: gameState
 ): gameState => {
   {
     ...gameState,

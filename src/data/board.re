@@ -59,3 +59,15 @@ let changeTileByID = (board: board, x: int, y: int, id: int): board => {
   | _ => board
   };
 };
+
+type fullCoords = {
+  x: int,
+  y: int
+};
+
+let getActualPosition = (coords: coords) : fullCoords => {
+  {
+    x: (coords.x * EggConstants.tileSize) + coords.offsetX,
+    y: (coords.y * EggConstants.tileSize) + coords.offsetY
+  };
+}

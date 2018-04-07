@@ -53,22 +53,18 @@ let doRotate = (gameState: gameState, clockwise: bool): gameState => {
   };
 };
 
-
+let resetOutcome = (gameState: gameState) : gameState => {
+  ...gameState,
+    outcome: ""
+};
 
 let doGameMove = (gameState: gameState, timePassed: int): gameState => {
-  let startGameState = {
-    ...gameState,
-    outcome: ""
-  };
-
-  let newGameState = EggMovement.doCalcs(startGameState, timePassed);
+  resetOutcome(gameState)
+  |> EggMovement.doCalcs(timePassed)
+  |> EggAction.checkAllPlayerTileActions
+  |> EggCollisions.checkAll
   
-  let newerGameState = EggAction.checkAllPlayerTileActions(newGameState);
-  
-  newerGameState;
   /*
-  let sortedPlayers = gameState.players; /*EggCollision.checkAllCollisions(newerGameState.players);*/
-
   let splitPlayers = sortedPlayers; /*BoardCollisions.checkBoardCollisions(
     newerGameState.board,
     sortedPlayers

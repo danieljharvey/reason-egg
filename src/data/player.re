@@ -109,3 +109,5 @@ let playerTypes: list(player) = [
 ];
 
 let getPlayerByType = (playerType: playerType) => EggUtils.find((player: player) => player.playerType === playerType, playerTypes);
+
+let getPlayerTypeByValue = (value: int) => EggUtils.find((player: player) => player.value === value, playerTypes);

@@ -1,6 +1,6 @@
 open EggTypes;
 
-let createPlayer = (x: int, y: int, playerType: playerType) : option(player) => {
+let createPlayer = (x: int, y: int, playerType: playerType, id: int) : option(player) => {
     let coords = { ...Player.defaultCoords, x, y };
     let direction = {
         ...Player.defaultCoords,
@@ -10,14 +10,16 @@ let createPlayer = (x: int, y: int, playerType: playerType) : option(player) => 
         {
             ...player, 
             coords,  
-            direction   
+            direction,
+            id   
         }
     }, Player.getPlayerByType(playerType));
 };
 
 let createPlayers = (board: board): list(player) => {
     List.fold_right((tile: tile, players: list(player)) => {
-        let optPlayer = createPlayer(tile.x, tile.y, tile.createPlayer);
+        let id = List.length(players) + 1;
+        let optPlayer = createPlayer(tile.x, tile.y, tile.createPlayer, id);
         switch (optPlayer) {
         | Some(player) => List.append(players, [player])
         | _ => players
@@ -40,7 +42,7 @@ let setupEnvironment = (gameState: gameState, env): gameStuff =>
 {    
     {
         tileImages: Tiles.loadTileImages(env),
-        playerImages: Player.loadPlayerImages(gameState.players, env),
+        playerImages: Player.loadPlayerImages(Player.playerTypes, env),
         boardAngle: 0.0,
         drawAngle: 0.0,
         gameState: gameState,

@@ -23,6 +23,29 @@ let correctForOverflow = (
   { ...coords, x: newX, y: newY };
 };
 
+let tupleToList = (tuple: ('a, 'a)) : list('a) => {
+  [fst(tuple), snd(tuple)];
+};
+
+let removeElt = (e, l) => {
+  let rec go = (l, acc) =>
+    switch l {
+    | [] => List.rev(acc)
+    | [x, ...xs] when e == x => go(xs, acc)
+    | [x, ...xs] => go(xs, [x, ...acc])
+    };
+  go(l, []);
+};
+
+let removeDuplicates = (l) => {
+  let rec go = (l, acc) =>
+    switch l {
+    | [] => List.rev(acc)
+    | [x, ...xs] => go(removeElt(x, xs), [x, ...acc])
+    };
+  go(l, []);
+};
+
 /*import * as _ from "ramda";
 import { Board } from "../objects/Board";
 import { BoardSize } from "../objects/BoardSize";
@@ -95,15 +118,9 @@ export class Utils {
 
   
 
-  public static flattenArray(arr: any[]) {
-    return [].concat.apply([], arr);
-  }
+ 
 
-  public static removeDuplicates(arr: any[]) {
-    return arr.filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-  }
+  
 
   // todo : a Maybe?
   public static getPlayerByValue(playerTypes, value: number) {
@@ -165,10 +182,4 @@ export class Utils {
     ))
   }
 
-  // gets the original JS object of options, not a Player
-  public static getPlayerTypeByValue = (value: number): Maybe<IPlayerType> => {
-    return maybe(allPlayerTypes.find(playerType => 
-      playerType.value === value
-    ))
-  }
 }*/
