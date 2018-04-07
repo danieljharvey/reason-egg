@@ -528,7 +528,7 @@ let getPlayerSpecificMoves = (
   timePassed: int,
   players: list(player)
 ) => {
-  (player.movePattern === "seek-egg") ? getSeekEggMoves(player, board, timePassed, players) : getEggMoves(player, board, timePassed);
+  (player.movePattern === SeekEgg) ? getSeekEggMoves(player, board, timePassed, players) : getEggMoves(player, board, timePassed);
 };
 
 let doPlayerCalcs = (

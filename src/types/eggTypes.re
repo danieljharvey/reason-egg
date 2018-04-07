@@ -9,6 +9,8 @@ type coords = {
   offsetY: int
 };
 
+type playerType = Nope | Egg | RedEgg | BlueEgg | YellowEgg | SilverEgg | RainbowEgg | Blade | FindBlade;
+
 type tile = {
   id: int,
   title: string,
@@ -19,12 +21,14 @@ type tile = {
   breakable: bool,
   action: string,
   dontAdd: bool,
-  createPlayer: string,
+  createPlayer: playerType,
   x: int,
   y: int
 };
 
 type board = list(list(tile));
+
+type movePattern = Normal | SeekEgg;
 
 type player = {
   coords,
@@ -35,7 +39,7 @@ type player = {
   frames: int,
   multiplier: int,
   falling: bool,
-  playerType: string,
+  playerType,
   moveSpeed: int,
   fallSpeed: int,
   value: int,
@@ -45,7 +49,7 @@ type player = {
   title: string,
   moved: bool,
   flying: bool,
-  movePattern: string
+  movePattern
 };
 
 type programState = Loading | Playing;

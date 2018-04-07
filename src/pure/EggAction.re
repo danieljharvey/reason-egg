@@ -105,22 +105,3 @@ let tileActionReduce = (player: player, currentGameState: gameState): gameState 
 
 let checkAllPlayerTileActions = (gameState: gameState): gameState => 
   List.fold_right(tileActionReduce,gameState.players, gameState);
-
-/*
-import { Board } from "../objects/Board";
-import { GameState } from "../objects/GameState";
-import { Player } from "../objects/Player";
-import * as Map from "./Map";
-
-// this concerns all the changes between player and board
-
-export class Action {
-  // go through each player, check it's effect on board, score and outcome, return new gameState obj
-  
-
- 
-
- 
-}
-
-*/
