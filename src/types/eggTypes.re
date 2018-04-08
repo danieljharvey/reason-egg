@@ -59,7 +59,7 @@ type gameState = {
   players: list(player),
   board: board,
   score: int,
-  rotations: int,
+  rotations: (int,int),
   drawAngle: float,
   outcome: string,
   boardAngle: float,

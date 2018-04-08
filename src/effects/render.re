@@ -217,7 +217,7 @@ let render = (env, gameStuff: gameStuff) => {
   clearBackground(env);
 
   drawTiles(drawAngle, gameStuff, env) |> ignore;
-  drawPlayers(drawAngle, gameStuff, env) |> ignore;
+  drawPlayers(0.0, gameStuff, env) |> ignore;
   
   Draw.popMatrix(env);
 };

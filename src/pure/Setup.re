@@ -32,7 +32,7 @@ let defaultGameState = (board: board): gameState => {
         players: createPlayers(board),
         board,
         score: 0,
-        rotations: 0,
+        rotations: (0,0),
         drawAngle: 0.0,
         outcome: "",
         gameAction: Playing,

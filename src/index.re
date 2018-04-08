@@ -11,10 +11,26 @@ let setup = (env) => {
   Setup.setupEnvironment(gameState, env);
 };
 
+let rotateWeight = (rotations: (int, int)): int => {
+  snd(rotations) - fst(rotations)
+};
+
+let calcSway = (boardAngle: float, rotations: (int, int)): float => {
+  let newBoardAngle = boardAngle +. (0.02 *. float_of_int(rotateWeight(rotations)));  
+  let corrected = (newBoardAngle > 0.0) ? newBoardAngle -. 0.01 : newBoardAngle +. 0.01;
+  if (corrected > 10.0) {
+    corrected -. 0.05;
+  } else if (corrected < 10.0) {
+    corrected +. 0.05;
+  } else {
+    corrected;
+  };
+};
+
 let updateGameStuff = (gameStuff: gameStuff, deltaTime: float): gameStuff => {
   ...gameStuff,
   gameState: EggGame.doAction(gameStuff.gameState, deltaTime),
-  boardAngle: gameStuff.boardAngle +. 0.01
+  boardAngle: calcSway(gameStuff.boardAngle, gameStuff.gameState.rotations)
 };
 
 let drawGame = (env, gameStuff: gameStuff) => {

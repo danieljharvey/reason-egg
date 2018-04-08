@@ -58,10 +58,12 @@ let checkNearlyFinished = (
   };
 };
 
+let incrementRotations = (clockwise: bool, rotations: (int, int)): (int, int) => 
+  (clockwise) ? (fst(rotations), snd(rotations) + 1) : (fst(rotations) + 1, snd(rotations));
 
 /* this rotates board and players it DOES NOT do animation - not our problem */
 let doRotate = (gameState: gameState, clockwise: bool): gameState => {
-  let rotations = gameState.rotations + 1;
+  let rotations = incrementRotations(clockwise, gameState.rotations);
 
   let boardSize = List.length(gameState.board);
 
