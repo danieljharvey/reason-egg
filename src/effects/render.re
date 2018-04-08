@@ -202,7 +202,16 @@ let drawTiles = (drawAngle: float, gameStuff, env) => {
 let drawPlayers = (drawAngle: float, gameStuff, env) =>
   List.map(perhapsDrawPlayer(drawAngle, gameStuff, env), gameStuff.gameState.players);
 
-let clearBackground = env => Draw.background(Constants.black, env);
+let clearBackground = env => {
+  Draw.fill({
+    r: 0.0,
+    g: 0.0,
+    b: 0.0,
+    a: 0.1
+  }, env);
+  let (width, height) = EggConstants.screenSize;
+  Draw.rect(~pos=(0,0), ~width=width, ~height=height, env);
+};
 
 let render = (env, gameStuff: gameStuff) => {
   let boardSize = List.length(gameStuff.gameState.board);
@@ -211,11 +220,11 @@ let render = (env, gameStuff: gameStuff) => {
   let drawAngle = -1.0 *. gameStuff.gameState.drawAngle;
 
   Draw.pushMatrix(env);
+  clearBackground(env);
 
   doRotate(boardAngle, env);
   Draw.scale(~x=scale, ~y=scale, env);
-  clearBackground(env);
-
+  
   drawTiles(drawAngle, gameStuff, env) |> ignore;
   drawPlayers(0.0, gameStuff, env) |> ignore;
   

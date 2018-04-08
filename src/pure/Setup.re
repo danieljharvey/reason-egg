@@ -46,6 +46,7 @@ let setupEnvironment = (gameState: gameState, env): gameStuff =>
         tileImages: Tiles.loadTileImages(env),
         playerImages: Player.loadPlayerImages(Player.playerTypes, env),
         boardAngle: 0.0,
-        gameState: gameState
+        gameState: gameState,
+        lastAngleChange: 0.0
     };
 };

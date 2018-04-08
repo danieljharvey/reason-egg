@@ -70,6 +70,7 @@ type gameStuff = {
   playerImages: list(imageAsset),
   tileImages: list(imageAsset),
   boardAngle: float,
+  lastAngleChange: float,
   gameState: gameState,
 };
 

@@ -12,25 +12,23 @@ let setup = (env) => {
 };
 
 let rotateWeight = (rotations: (int, int)): int => {
-  snd(rotations) - fst(rotations)
+  snd(rotations) - fst(rotations);
 };
 
-let calcSway = (boardAngle: float, rotations: (int, int)): float => {
-  let newBoardAngle = boardAngle +. (0.02 *. float_of_int(rotateWeight(rotations)));  
-  let corrected = (newBoardAngle > 0.0) ? newBoardAngle -. 0.01 : newBoardAngle +. 0.01;
-  if (corrected > 10.0) {
-    corrected -. 0.05;
-  } else if (corrected < 10.0) {
-    corrected +. 0.05;
-  } else {
-    corrected;
-  };
+let calcSway = (boardAngle: float, lastAngleChange: float, rotations: (int, int)): float => {
+  let newChange = (lastAngleChange /. 2.0) +. (0.02 *. float_of_int(rotateWeight(rotations)));
+  let random = (newChange < 0.01) ? Random.float(0.2) -. 0.1 : 0.0;
+  boardAngle +. newChange +. random;
 };
 
 let updateGameStuff = (gameStuff: gameStuff, deltaTime: float): gameStuff => {
-  ...gameStuff,
-  gameState: EggGame.doAction(gameStuff.gameState, deltaTime),
-  boardAngle: calcSway(gameStuff.boardAngle, gameStuff.gameState.rotations)
+  let newBoardAngle = calcSway(gameStuff.boardAngle, gameStuff.lastAngleChange, gameStuff.gameState.rotations);
+  {
+    ...gameStuff,
+    gameState: EggGame.doAction(gameStuff.gameState, deltaTime),
+    boardAngle: newBoardAngle,
+    lastAngleChange: gameStuff.boardAngle -. newBoardAngle
+  };
 };
 
 let drawGame = (env, gameStuff: gameStuff) => {
