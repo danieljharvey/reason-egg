@@ -4,28 +4,39 @@ open EggTypes;
 
 
 
-
-  /*
-let checkNearlyFinished = (
-  gameState: gameState
-): list(player) => {
-  if (Utils.checkLevelIsCompleted(gameState)) {
-    return gameState.players.map(player => {
-      if (player.value > 0) {
-        const maybeNewPlayer = Utils.getPlayerType("rainbow-egg");
-        return maybeNewPlayer.map(newPlayer => {
-          return player.modify({
-            ...newPlayer
-          });
-        }).valueOr(player)
-      }
-      return player;
-    });
-  }
-  return gameState.players;
+let makeRainbowEgg = (player: player) : player => {
+  let maybeNewPlayer = Player.getPlayerByType(RainbowEgg);
+  switch (maybeNewPlayer) {
+    | Some(rainbowEgg) => {
+      {
+        ...player,
+        frames: rainbowEgg.frames,
+        filename: rainbowEgg.filename,
+        multiplier: rainbowEgg.multiplier,
+        playerType: rainbowEgg.playerType,
+        value: rainbowEgg.value
+      };
+    }
+    | _ => player
+  };
 };
 
-*/
+let checkNearlyFinished = (
+  gameState: gameState
+): gameState => {
+  let newPlayers = if (Utils.checkLevelIsCompleted(gameState)) {
+    List.map((player: player) => {
+      (player.value > 0) ? makeRainbowEgg(player) : player;
+    }, gameState.players);
+  } else {
+    gameState.players;
+  };
+  {
+    ...gameState,
+    players: newPlayers
+  };
+};
+
 
 /* this rotates board and players it DOES NOT do animation - not our problem */
 let doRotate = (gameState: gameState, clockwise: bool): gameState => {
@@ -64,19 +75,7 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
   |> EggAction.checkAllPlayerTileActions
   |> EggCollisions.checkAll
   |> BoardCollisions.checkAll
-  
-  /*
-  let colouredPlayers = sortedPlayers; /*checkNearlyFinished(
-    {
-      ...newerGameState,
-      players: splitPlayers
-    }
-  );*/
-
-  {
-    ...newerGameState,
-    players: colouredPlayers
-  }*/
+  |> checkNearlyFinished
 };
 
 let doAction = (

@@ -8,7 +8,8 @@
     "build:web": "bsb -make-world -backend js",
     "build:web:watch": "bsb -clean-world -make-world -w -backend js",
     "build:native": "bsb -make-world -backend native",
-    "clean": "bsb -clean-world"
+    "clean": "bsb -clean-world",
+    "web:serve": "python -m SimpleHTTPServer"
   },
   "dependencies": {
     "Reasongl": "bsansouci/reasongl",

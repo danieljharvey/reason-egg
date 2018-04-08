@@ -46,23 +46,31 @@ let removeDuplicates = (l) => {
   go(l, []);
 };
 
-/*import * as _ from "ramda";
-import { Board } from "../objects/Board";
-import { BoardSize } from "../objects/BoardSize";
-import { Coords } from "../objects/Coords";
-import { GameState } from "../objects/GameState";
-import { Player } from "../objects/Player";
-import { Tile } from '../objects/Tile'
 
-import { IPlayerType, playerTypes as allPlayerTypes } from "../data/PlayerTypes"
+let playerIsValid = (player: player): bool => player.value > 0;
 
-import { maybe, Maybe } from 'tsmonad'
+let countPlayers = (players: list(player)): int => {
+  List.length(List.filter(playerIsValid, players));
+};
 
-// wee lad full of reusable functions
+/* get total outstanding points left to grab on board */
+let countCollectable = (board: board): int => {
+  List.fold_right((tile: tile, score: int) => {
+    switch (tile.action) {
+    | Collectable(x) => score + x
+    | _ => score
+    };
+  }, Board.getBoardTiles(board), 0);
+};
 
-const imagesFolder: string = "img/";
-const defaultMoveSpeed = 10
+/* check leftovers on board and whether player is over finish tile */
+let checkLevelIsCompleted = (gameState: gameState): bool => {
+  let collectable = countCollectable(gameState.board);
+  let playerCount: int = countPlayers(gameState.players);
+  (collectable < 1 && playerCount < 2);
+};
 
+/* 
 export class Utils {
   public static getRandomObjectKey(object: object) {
     const keys = Object.keys(object);
@@ -138,31 +146,7 @@ export class Utils {
     )
   }
 
-  // check leftovers on board and whether player is over finish tile
-  public static checkLevelIsCompleted(gameState: GameState): boolean {
-    const collectable = Utils.countCollectable(gameState.board);
-    const playerCount: number = Utils.countPlayers(gameState.players);
-    return collectable < 1 && playerCount < 2;
-  }
 
-  public static countPlayers(players: Player[]): number {
-    const validPlayers = players.filter(player => {
-      return player && player.value > 0;
-    });
-    return validPlayers.length;
-  }
-
-  // get total outstanding points left to grab on board
-  public static countCollectable(board: Board): number {
-    const tiles = board.getAllTiles();
-    return tiles.reduce((collectable, tile) => {
-      const score = tile.collectable;
-      if (score > 0) {
-        return collectable + score;
-      }
-      return collectable;
-    }, 0);
-  }
 
   public static getTileImagePath(img: string): string {
     return imagesFolder + img
