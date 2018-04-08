@@ -63,13 +63,9 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
   |> EggMovement.doCalcs(timePassed)
   |> EggAction.checkAllPlayerTileActions
   |> EggCollisions.checkAll
+  |> BoardCollisions.checkAll
   
   /*
-  let splitPlayers = sortedPlayers; /*BoardCollisions.checkBoardCollisions(
-    newerGameState.board,
-    sortedPlayers
-  );*/
-
   let colouredPlayers = sortedPlayers; /*checkNearlyFinished(
     {
       ...newerGameState,
