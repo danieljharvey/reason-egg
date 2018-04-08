@@ -1,8 +1,29 @@
 open EggTypes;
 
+open Reprocessing;
 
+let playerIsValid = (player: player): bool => player.value > 0;
 
+let countPlayers = (players: list(player)): int => {
+  List.length(List.filter(playerIsValid, players));
+};
 
+/* get total outstanding points left to grab on board */
+let countCollectable = (board: board): int => {
+  List.fold_right((tile: tile, score: int) => {
+    switch (tile.action) {
+    | Collectable(x) => score + x
+    | _ => score
+    };
+  }, Board.getBoardTiles(board), 0);
+};
+
+/* check leftovers on board and whether player is over finish tile */
+let checkLevelIsCompleted = (gameState: gameState): bool => {
+  let collectable = countCollectable(gameState.board);
+  let playerCount: int = countPlayers(gameState.players);
+  (collectable < 1 && playerCount < 2);
+};
 
 let makeRainbowEgg = (player: player) : player => {
   let maybeNewPlayer = Player.getPlayerByType(RainbowEgg);
@@ -24,7 +45,7 @@ let makeRainbowEgg = (player: player) : player => {
 let checkNearlyFinished = (
   gameState: gameState
 ): gameState => {
-  let newPlayers = if (Utils.checkLevelIsCompleted(gameState)) {
+  let newPlayers = if (checkLevelIsCompleted(gameState)) {
     List.map((player: player) => {
       (player.value > 0) ? makeRainbowEgg(player) : player;
     }, gameState.players);
@@ -60,7 +81,8 @@ let doRotate = (gameState: gameState, clockwise: bool): gameState => {
     board: newBoard,
     players: rotatedPlayers,
     rotateAngle,
-    rotations
+    rotations,
+    gameAction: Playing
   };
 };
 
@@ -80,16 +102,24 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
 
 let doAction = (
   gameState: gameState,
-  action: string,
   timePassed: int
 ): gameState => {
-  if (action === "rotateLeft") {
-    doRotate(gameState, false);
-  } else if (action === "rotateRight") {
-    doRotate(gameState, true);
-  } else if (action === "") {
-    doGameMove(gameState, timePassed);
-  } else {
-    gameState;
+  switch (gameState.gameAction) {
+  | TurnLeft => doRotate(gameState,false)
+  | TurnRight => doRotate(gameState, true)
+  | Playing => doGameMove(gameState, timePassed)
+  | _ => gameState
   };
+};
+
+let processRotate = (gameState: gameState, keyCode: Reprocessing_Events.keycodeT): gameState => {
+  (gameState.gameAction === Playing) ? 
+    {
+      ...gameState,
+      gameAction: switch (keyCode) {
+        | Left => RotatingLeft(0)
+        | Right => RotatingRight(0)
+        | _ => gameState.gameAction
+        }
+    } : gameState;
 };

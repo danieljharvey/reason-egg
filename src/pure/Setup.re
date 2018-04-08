@@ -34,7 +34,8 @@ let defaultGameState = (board: board): gameState => {
         score: 0,
         rotations: 0,
         rotateAngle: 0.0,
-        outcome: ""
+        outcome: "",
+        gameAction: Playing
     };
 };
 
@@ -45,7 +46,6 @@ let setupEnvironment = (gameState: gameState, env): gameStuff =>
         playerImages: Player.loadPlayerImages(Player.playerTypes, env),
         boardAngle: 0.0,
         drawAngle: 0.0,
-        gameState: gameState,
-        programState: Playing
+        gameState: gameState
     };
 };

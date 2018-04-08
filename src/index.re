@@ -11,7 +11,7 @@ let setup = (env) => {
   Setup.setupEnvironment(gameState, env);
 };
 
-let nextFrame = (frames, frame) => frame < frames ? frame + 1 : 1;
+let nextFrame = (frames, frame): int => frame < frames ? frame + 1 : 1;
 
 let incrementPlayerFrame = (player: player) : player => {
   ...player,
@@ -38,28 +38,52 @@ let changeAngle = (newAngle: float) : float =>
     newAngle;
   };
 
-let updateGameStuff = (gameStuff: gameStuff) => {
+let updateGameStuff = (gameStuff: gameStuff): gameStuff => {
   ...gameStuff,
-  gameState: EggGame.doAction(gameStuff.gameState, "", 10),
-  boardAngle: gameStuff.boardAngle +. 0.01,
+  gameState: EggGame.doAction(gameStuff.gameState, 10),
+  /* boardAngle: gameStuff.boardAngle +. 0.01, */
   drawAngle: calcDrawAngle(gameStuff.boardAngle)
 };
 
 let drawGame = (env, gameStuff: gameStuff) => {
   Render.render(env, gameStuff);
-  updateGameStuff(gameStuff);
 };
 
-let drawNothing = (env, gameStuff: gameStuff) => {
+let drawNothing = (env, gameStuff: gameStuff): gameStuff => {
   Draw.background(Constants.white, env);
   gameStuff;
 };
 
-let draw = (gameStuff: gameStuff, env) => {
-  switch gameStuff.programState {
-  | Playing => drawGame(env, gameStuff)
-  | Loading => drawNothing(env, gameStuff)
+let rotateBoard = (clockwise: bool, angle: int, env, gameStuff): gameStuff => {
+  let boardAngle = (clockwise) ? float_of_int(angle) : float_of_int(-1 * angle);
+  let newAngle = angle + 1;
+  let newGameAction = clockwise ? RotatingRight(newAngle) : RotatingLeft(newAngle);
+  {
+    ...gameStuff,
+    boardAngle,
+    gameState: {
+      ...gameStuff.gameState,
+      gameAction: newGameAction
+    }
   };
 };
 
-run(~setup, ~draw, ());
+let draw = (gameStuff: gameStuff, env): gameStuff => {
+  let newGameStuff = switch gameStuff.gameState.gameAction {
+  | Playing => updateGameStuff(gameStuff)
+  | RotatingLeft(angle) => rotateBoard(false, angle, env, gameStuff)
+  | RotatingRight(angle) => rotateBoard(true, angle, env, gameStuff)
+  | Paused => drawNothing(env, gameStuff)
+  };
+  drawGame(env, newGameStuff);
+  newGameStuff;
+};
+
+let keyTyped = (gameStuff: gameStuff, env) => {
+  {
+    ...gameStuff,
+    gameState: EggGame.processRotate(gameStuff.gameState, Env.keyCode(env))
+  };
+};
+
+run(~setup, ~draw, ~keyTyped, ());
