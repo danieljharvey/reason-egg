@@ -71,8 +71,8 @@ let doRotate = (gameState: gameState, clockwise: bool): gameState => {
     EggMap.rotatePlayer(boardSize, player, clockwise);
   }, gameState.players);
 
-  let rotateAngle: float = EggMap.changeRenderAngle(
-    gameState.rotateAngle,
+  let drawAngle: float = EggMap.changeRenderAngle(
+    gameState.drawAngle,
     clockwise
   );
 
@@ -80,8 +80,9 @@ let doRotate = (gameState: gameState, clockwise: bool): gameState => {
     ...gameState,
     board: newBoard,
     players: rotatedPlayers,
-    rotateAngle,
+    drawAngle,
     rotations,
+    boardAngle: 0.0,
     gameAction: Playing
   };
 };
@@ -91,9 +92,9 @@ let resetOutcome = (gameState: gameState) : gameState => {
     outcome: ""
 };
 
-let doGameMove = (gameState: gameState, timePassed: int): gameState => {
+let doGameMove = (gameState: gameState, deltaTime: float): gameState => {
   resetOutcome(gameState)
-  |> EggMovement.doCalcs(timePassed)
+  |> EggMovement.doCalcs(deltaTime)
   |> EggAction.checkAllPlayerTileActions
   |> EggCollisions.checkAll
   |> BoardCollisions.checkAll
@@ -102,12 +103,12 @@ let doGameMove = (gameState: gameState, timePassed: int): gameState => {
 
 let doAction = (
   gameState: gameState,
-  timePassed: int
+  deltaTime: float
 ): gameState => {
   switch (gameState.gameAction) {
   | TurnLeft => doRotate(gameState,false)
   | TurnRight => doRotate(gameState, true)
-  | Playing => doGameMove(gameState, timePassed)
+  | Playing => doGameMove(gameState, deltaTime)
   | _ => gameState
   };
 };
@@ -117,8 +118,8 @@ let processRotate = (gameState: gameState, keyCode: Reprocessing_Events.keycodeT
     {
       ...gameState,
       gameAction: switch (keyCode) {
-        | Left => RotatingLeft(0)
-        | Right => RotatingRight(0)
+        | Left => RotatingLeft(0.0)
+        | Right => RotatingRight(0.0)
         | _ => gameState.gameAction
         }
     } : gameState;

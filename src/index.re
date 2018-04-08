@@ -11,38 +11,10 @@ let setup = (env) => {
   Setup.setupEnvironment(gameState, env);
 };
 
-let nextFrame = (frames, frame): int => frame < frames ? frame + 1 : 1;
-
-let incrementPlayerFrame = (player: player) : player => {
-  ...player,
-  currentFrame: nextFrame(player.frames, player.currentFrame)
-};
-
-let calcDrawAngle = (boardAngle: float) : float =>
-  if (boardAngle > 270.0) {
-    270.0;
-  } else if (boardAngle > 180.0) {
-    180.0;
-  } else if (boardAngle > 90.0) {
-    90.0;
-  } else {
-    0.0;
-  };
-
-let changeAngle = (newAngle: float) : float =>
-  if (newAngle > 360.0) {
-    newAngle -. 360.0;
-  } else if (newAngle < 0.0) {
-    newAngle +. 360.0;
-  } else {
-    newAngle;
-  };
-
-let updateGameStuff = (gameStuff: gameStuff): gameStuff => {
+let updateGameStuff = (gameStuff: gameStuff, deltaTime: float): gameStuff => {
   ...gameStuff,
-  gameState: EggGame.doAction(gameStuff.gameState, 10),
-  /* boardAngle: gameStuff.boardAngle +. 0.01, */
-  drawAngle: calcDrawAngle(gameStuff.boardAngle)
+  gameState: EggGame.doAction(gameStuff.gameState, deltaTime),
+  boardAngle: gameStuff.boardAngle +. 0.01
 };
 
 let drawGame = (env, gameStuff: gameStuff) => {
@@ -54,26 +26,42 @@ let drawNothing = (env, gameStuff: gameStuff): gameStuff => {
   gameStuff;
 };
 
-let rotateBoard = (clockwise: bool, angle: int, env, gameStuff): gameStuff => {
-  let boardAngle = (clockwise) ? float_of_int(angle) : float_of_int(-1 * angle);
-  let newAngle = angle + 1;
-  let newGameAction = clockwise ? RotatingRight(newAngle) : RotatingLeft(newAngle);
+let rotateBoardLeft = (angle: float, env, gameStuff, deltaTime): gameStuff => {
+  let boardAngle = -1.0 *. angle;
+  let newAngle = angle +. (deltaTime *. EggConstants.rotateSpeed);
+  let newGameAction = angle > 90.0 ? TurnLeft : RotatingLeft(newAngle);
   {
     ...gameStuff,
-    boardAngle,
     gameState: {
       ...gameStuff.gameState,
-      gameAction: newGameAction
+      gameAction: newGameAction,
+      boardAngle
     }
   };
 };
 
+let rotateBoardRight = (angle: float, env, gameStuff, deltaTime): gameStuff => {
+  let boardAngle = angle;
+  let newAngle = angle +. (deltaTime *. EggConstants.rotateSpeed);
+  let newGameAction = angle > 90.0 ? TurnRight : RotatingRight(newAngle);
+  {
+    ...gameStuff,
+    gameState: {
+      ...gameStuff.gameState,
+      gameAction: newGameAction,
+      boardAngle
+    }
+  };
+};
+
+
 let draw = (gameStuff: gameStuff, env): gameStuff => {
+  let deltaTime = Env.deltaTime(env);
   let newGameStuff = switch gameStuff.gameState.gameAction {
-  | Playing => updateGameStuff(gameStuff)
-  | RotatingLeft(angle) => rotateBoard(false, angle, env, gameStuff)
-  | RotatingRight(angle) => rotateBoard(true, angle, env, gameStuff)
+  | RotatingLeft(angle) => rotateBoardLeft(angle, env, gameStuff, deltaTime)
+  | RotatingRight(angle) => rotateBoardRight(angle, env, gameStuff, deltaTime)
   | Paused => drawNothing(env, gameStuff)
+  | _ => updateGameStuff(gameStuff, deltaTime)
   };
   drawGame(env, newGameStuff);
   newGameStuff;

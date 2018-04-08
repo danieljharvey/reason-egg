@@ -17,9 +17,9 @@ let getScreenWidth = screenSize => {
 let getCenter = screenSize : float =>
   float_of_int(getScreenWidth(screenSize)) /. 2.0;
 
-let doRotate = (gameStuff, env) =>
-  gameStuff.boardAngle == 0.0 ?
-    gameStuff :
+let doRotate = (boardAngle: float, env) =>
+  boardAngle == 0.0 ?
+    () :
     {
       let center = getCenter(screenSize);
       Draw.translate(
@@ -27,13 +27,12 @@ let doRotate = (gameStuff, env) =>
         ~y=center,
         env
       );
-      Draw.rotate(EggUtils.degreesToRadians(gameStuff.boardAngle), env);
+      Draw.rotate(EggUtils.degreesToRadians(boardAngle), env);
       Draw.translate(
         ~x=(-1.0) *. center,
         ~y=(-1.0) *. center,
         env
       );
-      gameStuff;
     };
 
 let rotateTransform = (coords: coords, tileSize, angleDegrees, env) => {
@@ -75,7 +74,7 @@ let drawPlayer =
   ();
 };
 
-let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
+let drawTile = (drawAngle: float, gameStuff, env, tile: tile, imageAsset: imageAsset) => {
   Draw.pushMatrix(env);
   let tileCoords = {
     ...Player.defaultCoords,
@@ -85,7 +84,7 @@ let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
   rotateTransform(
     tileCoords,
     tileSize,
-    (-1.0) *. gameStuff.drawAngle,
+    (-1.0) *. drawAngle,
     env
   );
   let (_, image) = imageAsset;
@@ -104,9 +103,9 @@ let drawTile = (gameStuff, env, tile: tile, imageAsset: imageAsset) => {
   ();
 };
 
-let perhapsDrawTile = (gameStuff: gameStuff, env, tile: tile) => 
+let perhapsDrawTile = (drawAngle: float, gameStuff: gameStuff, env, tile: tile) => 
   EggUtils.optionMap(
-    image => drawTile(gameStuff, env, tile, image),
+    image => drawTile(drawAngle, gameStuff, env, tile, image),
     Tiles.getTileImageByID(gameStuff.tileImages, tile.filename));
 
 let fallingOffLeft = (coords: coords): bool => (
@@ -174,20 +173,20 @@ let drawShadowPlayer =
 };
 
 
-let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
+let perhapsDrawPlayer = (drawAngle: float, gameStuff: gameStuff, env, player: player) => {
   EggUtils.optionMap(image =>
     {
       drawPlayer(
         env,
         player,
         image,
-        gameStuff.drawAngle
+        drawAngle
       );
       drawShadowPlayer(
         env,
         player,
         image,
-        gameStuff.drawAngle,
+        drawAngle,
         List.length(gameStuff.gameState.board)
       );
     },
@@ -195,27 +194,30 @@ let perhapsDrawPlayer = (gameStuff: gameStuff, env, player: player) => {
   );
 };
 
-let drawTiles = (gameStuff, env) => {
-  List.map(perhapsDrawTile(gameStuff, env), Board.getBoardTiles(gameStuff.gameState.board));
+let drawTiles = (drawAngle: float, gameStuff, env) => {
+  List.map(perhapsDrawTile(drawAngle, gameStuff, env), Board.getBoardTiles(gameStuff.gameState.board));
   gameStuff;
 };
 
-let drawPlayers = (gameStuff, env) =>
-  List.map(perhapsDrawPlayer(gameStuff, env), gameStuff.gameState.players);
+let drawPlayers = (drawAngle: float, gameStuff, env) =>
+  List.map(perhapsDrawPlayer(drawAngle, gameStuff, env), gameStuff.gameState.players);
 
 let clearBackground = env => Draw.background(Constants.black, env);
 
 let render = (env, gameStuff: gameStuff) => {
   let boardSize = List.length(gameStuff.gameState.board);
   let scale = getScreenScale(screenSize, boardSize);
+  let boardAngle = gameStuff.boardAngle +. gameStuff.gameState.boardAngle;
+  let drawAngle = -1.0 *. gameStuff.gameState.drawAngle;
 
   Draw.pushMatrix(env);
-  doRotate(gameStuff, env) |> ignore;
+
+  doRotate(boardAngle, env);
   Draw.scale(~x=scale, ~y=scale, env);
   clearBackground(env);
 
-  drawTiles(gameStuff, env) |> ignore;
-  drawPlayers(gameStuff, env) |> ignore;
+  drawTiles(drawAngle, gameStuff, env) |> ignore;
+  drawPlayers(drawAngle, gameStuff, env) |> ignore;
   
   Draw.popMatrix(env);
 };

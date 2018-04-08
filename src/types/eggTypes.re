@@ -13,7 +13,7 @@ type tileAction = NoAction | Teleport | CompleteLevel | PinkSwitch | GreenSwitch
 
 type playerType = Nope | Egg | RedEgg | BlueEgg | YellowEgg | SilverEgg | RainbowEgg | Blade | FindBlade;
 
-type gameAction = Playing | Paused | TurnLeft | TurnRight | RotatingLeft(int) | RotatingRight(int);
+type gameAction = Playing | Paused | TurnLeft | TurnRight | RotatingLeft(float) | RotatingRight(float);
 
 type tile = {
   id: int,
@@ -60,8 +60,9 @@ type gameState = {
   board: board,
   score: int,
   rotations: int,
-  rotateAngle: float,
+  drawAngle: float,
   outcome: string,
+  boardAngle: float,
   gameAction
 };
 
@@ -69,7 +70,6 @@ type gameStuff = {
   playerImages: list(imageAsset),
   tileImages: list(imageAsset),
   boardAngle: float,
-  drawAngle: float,
   gameState: gameState,
 };
 

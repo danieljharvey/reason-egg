@@ -178,16 +178,16 @@ let incrementPlayerFrame = (player: player): player => {
 
 let calcMoveAmount = (
   moveSpeed: int,
-  timePassed: int
+  deltaTime: float
 ): int => {
-  let moveAmount: float = 1. /. float_of_int(offsetDivide) *.  float_of_int(moveSpeed) *. 5.;
-  let frameRateAdjusted: int = int_of_float(moveAmount *. float_of_int(timePassed));
-  (timePassed === 0) ? 0 : frameRateAdjusted;
+  let moveAmount: float = float_of_int(moveSpeed);
+  let frameRateAdjusted: float = moveAmount *. deltaTime *. EggConstants.gameSpeed;
+  (deltaTime === 0.) ? 0 : int_of_float(frameRateAdjusted);
 };
 
-let playerFalling = (timePassed: int, player: player): player => {
+let playerFalling = (deltaTime: float, player: player): player => {
   
-  let fallAmount: int = calcMoveAmount(player.fallSpeed, timePassed);
+  let fallAmount: int = calcMoveAmount(player.fallSpeed, deltaTime);
   
   let newOffsetY = player.coords.offsetX + fallAmount;
   let newCoords = {
@@ -200,8 +200,8 @@ let playerFalling = (timePassed: int, player: player): player => {
   };
 };
 
-let playerRegularRolling = (timePassed: int, player: player): player => {
-  let moveAmount = calcMoveAmount(player.moveSpeed, timePassed);
+let playerRegularRolling = (deltaTime: float, player: player): player => {
+  let moveAmount = calcMoveAmount(player.moveSpeed, deltaTime);
 
   let coords = player.coords;
 
@@ -230,14 +230,14 @@ let playerRegularRolling = (timePassed: int, player: player): player => {
   };
 };
 /* this does the left/right moving, but does not care if walls are there as that is the responsibility of checkPlayerDirection */
-let incrementPlayerDirection = (timePassed: int, player: player): player => {
+let incrementPlayerDirection = (deltaTime: float, player: player): player => {
 
   if (player.falling) {
-    playerFalling(timePassed, player);
+    playerFalling(deltaTime, player);
   } else if (player.moveSpeed === 0 || player.stop !== false) {
     player;
   } else {
-    playerRegularRolling(timePassed, player);
+    playerRegularRolling(deltaTime, player);
   };
 
   /* ALL THIS CORRECTION SHIT NEEDS IT'S OWN FUNCTION YO */
@@ -454,7 +454,7 @@ let checkPlayerDirection = (board: board, player: player): player => {
     : checkStandardPlayerDirection(board, player);
 };
 
-let checkFloorBelowPlayer = (board: board, timePassed: int, player: player): player => {
+let checkFloorBelowPlayer = (board: board, player: player): player => {
   /*
   if (player.coords.offsetX !== 0) {
     return player;
@@ -494,7 +494,7 @@ let checkFloorBelowPlayer = (board: board, timePassed: int, player: player): pla
 let getSeekEggMoves = (
   oldPlayer: player,
   board: board,
-  timePassed: int,
+  deltaTime: float,
   players: list(player),
   player: player
 ) => {
@@ -512,27 +512,27 @@ let getSeekEggMoves = (
 let getEggMoves = (
   oldPlayer: player,
   board: board,
-  timePassed: int,
+  deltaTime: float,
   player: player
 ) => {
   player
-  |> checkFloorBelowPlayer(board, timePassed)
+  |> checkFloorBelowPlayer(board)
   |> checkPlayerDirection(board) 
-  |> incrementPlayerDirection(timePassed)
+  |> incrementPlayerDirection(deltaTime)
 };
 
 let getPlayerSpecificMoves = (
   player: player,
   board: board,
-  timePassed: int,
+  deltaTime: float,
   players: list(player)
 ) => {
-  (player.movePattern === SeekEgg) ? getSeekEggMoves(player, board, timePassed, players) : getEggMoves(player, board, timePassed);
+  (player.movePattern === SeekEgg) ? getSeekEggMoves(player, board, deltaTime, players) : getEggMoves(player, board, deltaTime);
 };
 
 let doPlayerCalcs = (
   board: board,
-  timePassed: int,
+  deltaTime: float,
   players: list(player),
   player: player
 ) => {
@@ -540,7 +540,7 @@ let doPlayerCalcs = (
   let playerSpecific = getPlayerSpecificMoves(
     player,
     board,
-    timePassed,
+    deltaTime,
     players
   );
   
@@ -553,12 +553,12 @@ let doPlayerCalcs = (
 };
 
 let doCalcs = (
-  timePassed: int,  
+  deltaTime: float,  
   gameState: gameState
 ): gameState => {
   {
     ...gameState,
-    players: List.map(doPlayerCalcs(gameState.board, timePassed, gameState.players), gameState.players)
+    players: List.map(doPlayerCalcs(gameState.board, deltaTime, gameState.players), gameState.players)
   };
 };
 /*

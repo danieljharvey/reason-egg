@@ -217,7 +217,7 @@ let rotatePlayer = (
 let rotateBoard = (board: board, clockwise: bool): board => {
   let tiles = Board.getBoardTiles(board);
 
-  let boardSize = List.length(board) - 1;
+  let boardSize = List.length(board);
 
   let rotatedBoard = List.fold_right((tile, currentBoard) => {
     let coords: coords = { ...Player.defaultCoords, x: tile.x, y: tile.y };
