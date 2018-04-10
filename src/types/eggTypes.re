@@ -20,11 +20,10 @@ type tile = {
   title: string,
   filename: string,
   background: bool,
-  frontLayer: bool,
   breakable: bool,
   action: tileAction,
-  dontAdd: bool,
   createPlayer: playerType,
+  render: bool,
   x: int,
   y: int
 };
