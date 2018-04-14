@@ -13,7 +13,7 @@ let chooseHigherLevelPlayer = (player1: player, player2: player): player => {
 };
 
 let fetchPlayerByID = (players: list(player), id: int): option(player) => {
-  EggUtils.find((player: player) => player.id === id, players);
+  Utils.find((player: player) => player.id === id, players);
 };
 
 let combinePlayers = (player1: player, player2: player): list(player) => {
@@ -51,8 +51,8 @@ let createNewPlayers = (collided: list(combination), players: list(player)): lis
 };
 
 let playerIsInList = (list: list(int), player: player): bool => {
-  let match = EggUtils.find(id => player.id === id, list);
-  EggUtils.isNone(match);
+  let match = Utils.find(id => player.id === id, list);
+  Utils.isNone(match);
 };
 
 let removeCollidedPlayers = (

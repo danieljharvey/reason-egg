@@ -139,7 +139,7 @@ let findTile = (board: board, currentCoords: coords, id: int): option(tile) => {
   if (List.length(teleporters) === 0) {
     None;
   } else {
-    Some(EggUtils.randomFromList(teleporters));
+    Some(Utils.randomFromList(teleporters));
   };
 };
 

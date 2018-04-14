@@ -5,6 +5,11 @@ open JsTypes;
 
 open EggConstants;
 
+let pi = 3.14159265358979323846;
+
+let degreesToRadians = (degrees: float) : float =>
+  degrees /. 360.0 *. (pi *. 2.0);
+
 let getScreenScale = (screenSize, boardSize) => {
   let (width, _) = screenSize;
   float_of_int(width) /. float_of_int(boardSize * EggConstants.tileSize);
@@ -28,7 +33,7 @@ let doRotate = (boardAngle: float, env) =>
         ~y=center,
         env
       );
-      Draw.rotate(EggUtils.degreesToRadians(boardAngle), env);
+      Draw.rotate(degreesToRadians(boardAngle), env);
       Draw.translate(
         ~x=(-1.0) *. center,
         ~y=(-1.0) *. center,
@@ -45,7 +50,7 @@ let rotateTransform = (coords: coords, tileSize, angleDegrees, env) => {
     ~x=middleLeft,
     ~y=middleTop,env
   );
-  Draw.rotate(EggUtils.degreesToRadians(angleDegrees), env);
+  Draw.rotate(degreesToRadians(angleDegrees), env);
   env;
 };
 

@@ -9,16 +9,20 @@
             "subdirs": true
         },
         {
-            "dir": "../game/src/pure"
+            "dir": "../game/src/pure",
+            "subdirs": true
         },
         {
-            "dir": "../game/src/types"
+            "dir": "../game/src/constants",
+            "subdirs": true
         },
         {
-            "dir": "../src/utils"
+            "dir": "../game/src/static",
+            "subdirs": true
         },
         {
-            "dir": "../src/data"
+            "dir": "../game/src/types",
+            "subdirs": true
         }
     ],
     "package-specs": [

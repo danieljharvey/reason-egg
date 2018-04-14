@@ -60,9 +60,6 @@ let find = (f, list) => {
 let randomFromList = (list: list('a)) : 'a => 
   List.nth(list, Random.int(List.length(list)));
 
-let degreesToRadians = (degrees: float) : float =>
-  degrees /. 360.0 *. (pi *. 2.0);
-
 let isNone = (item: option('a)): bool => 
   switch (item) {
     | None => true

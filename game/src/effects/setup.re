@@ -7,7 +7,7 @@ let createPlayer = (x: int, y: int, playerType: playerType, id: int) : option(pl
         ...Player.defaultCoords,
         x: 1
     };
-    EggUtils.optionMap(player => {
+    Utils.optionMap(player => {
         {
             ...player, 
             coords,  
@@ -47,7 +47,7 @@ let setupEnvironment = (gameState: gameState, env): gameStuff =>
 {    
     {
         tileImages: DrawTile.loadTileImages(Tiles.tiles, env),
-        playerImages: Player.loadPlayerImages(Player.playerTypes, env),
+        playerImages: DrawPlayer.loadPlayerImages(Player.playerTypes, env),
         boardAngle: 0.0,
         gameState: gameState,
         lastAngleChange: 0.0
