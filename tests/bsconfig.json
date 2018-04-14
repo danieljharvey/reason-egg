@@ -33,7 +33,9 @@
     ],
     "suffix": ".bs.js",
     "namespace": true,
-    "bs-dependencies": [],
+    "bs-dependencies": [
+        "@glennsl/bs-jest"
+    ],
     "refmt": 3,
     "warnings": {
         "error": "+5"
