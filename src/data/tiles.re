@@ -187,6 +187,7 @@ let tiles: list(EggTypes.tile) = [
   },
   {
     ...idTile,
+    action: ClosedDoor,
     background: true,
     id: 25,
     filename: "tiles/door-closed.png",

@@ -9,11 +9,13 @@ type coords = {
   offsetY: int
 };
 
-type tileAction = NoAction | Teleport | CompleteLevel | PinkSwitch | GreenSwitch | SplitEggs | Collectable(int);
+type tileAction = NoAction | Teleport | ClosedDoor | CompleteLevel | PinkSwitch | GreenSwitch | SplitEggs | Collectable(int);
 
 type playerType = Nope | Egg | RedEgg | BlueEgg | YellowEgg | SilverEgg | RainbowEgg | Blade | FindBlade;
 
 type gameAction = Playing | Paused | TurnLeft | TurnRight | RotatingLeft(float) | RotatingRight(float);
+
+type visualMode = Standard | MegaVibes;
 
 type tile = {
   id: int,
@@ -66,7 +68,8 @@ type gameState = {
   outcome: string,
   boardAngle: float,
   currentFrame: int,
-  gameAction
+  gameAction,
+  visualMode
 };
 
 type gameStuff = {
