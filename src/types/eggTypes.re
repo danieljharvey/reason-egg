@@ -56,7 +56,8 @@ type player = {
   title: string,
   moved: bool,
   flying: bool,
-  movePattern
+  movePattern,
+  size: float
 };
 
 type gameState = {

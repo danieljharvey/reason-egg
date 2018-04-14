@@ -32,6 +32,8 @@ let getBoardTiles = (board: board): list(tile) => {
 
 let getDrawTiles = (board: board): list(tile) => List.filter((tile: tile) => {tile.render}, getBoardTiles(board));
 
+let getBoardSize = (board: board): int => List.length(board);
+
 /* replace a tile on the board, return new board */
 let changeTile = (board: board, newTile: tile): board => 
   List.mapi((x, row) => 

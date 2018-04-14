@@ -21,7 +21,8 @@ let defaultPlayer: player = {
   title: "",
   moved: false,
   flying: false,
-  movePattern: Normal
+  movePattern: Normal,
+  size: 1.0
 };
 
 let loadPlayerImages = (players: list(player), env) =>
