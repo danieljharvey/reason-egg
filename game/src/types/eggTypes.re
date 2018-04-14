@@ -5,6 +5,8 @@ type coords = {
   offsetY: int
 };
 
+type eggKeycode = KeyLeft | KeyRight | KeyUnknown;
+
 type tileAction = NoAction | Teleport | ClosedDoor | CompleteLevel | PinkSwitch | GreenSwitch | SplitEggs | Collectable(int);
 
 type playerType = Nope | Egg | RedEgg | BlueEgg | YellowEgg | SilverEgg | RainbowEgg | Blade | FindBlade;

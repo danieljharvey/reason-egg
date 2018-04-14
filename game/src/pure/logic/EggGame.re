@@ -82,13 +82,13 @@ let doAction = (
   };
 };
 
-let processRotate = (gameState: gameState, keyCode: Reprocessing_Events.keycodeT): gameState => {
+let processRotate = (gameState: gameState, keyCode: eggKeycode): gameState => {
   (gameState.gameAction === Playing) ? 
     {
       ...gameState,
       gameAction: switch (keyCode) {
-        | Left => RotatingLeft(0.0)
-        | Right => RotatingRight(0.0)
+        | KeyLeft => RotatingLeft(0.0)
+        | KeyRight => RotatingRight(0.0)
         | _ => gameState.gameAction
         }
     } : gameState;
