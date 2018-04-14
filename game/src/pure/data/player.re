@@ -27,7 +27,7 @@ let defaultPlayer: player = {
 
 let loadPlayerImages = (players: list(player), env) =>
   List.map(
-    (player: player) => EggUtils.loadImage(env, player.filename),
+    (player: player) => RenderUtils.loadImage(env, player.filename),
     players
   );
 

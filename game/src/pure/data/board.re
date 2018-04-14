@@ -74,4 +74,4 @@ let getActualPosition = (coords: coords) : fullCoords => {
     x: (coords.x * EggConstants.tileSize) + coords.offsetX,
     y: (coords.y * EggConstants.tileSize) + coords.offsetY
   };
-}
+};

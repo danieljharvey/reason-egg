@@ -46,29 +46,46 @@ let removeDuplicates = (l) => {
   go(l, []);
 };
 
+let optionMap = (f, option: option('a)) =>
+  switch option {
+  | Some(x) => Some(f(x))
+  | _ => None
+  };
 
-let playerIsValid = (player: player): bool => player.value > 0;
-
-let countPlayers = (players: list(player)): int => {
-  List.length(List.filter(playerIsValid, players));
+let find = (f, list) => {
+  let found = List.filter(f, list);
+  List.length(found) === 0 ? None : Some(List.hd(found));
 };
 
-/* get total outstanding points left to grab on board */
-let countCollectable = (board: board): int => {
-  List.fold_right((tile: tile, score: int) => {
-    switch (tile.action) {
-    | Collectable(x) => score + x
-    | _ => score
+let randomFromList = (list: list('a)) : 'a => 
+  List.nth(list, Random.int(List.length(list)));
+
+let degreesToRadians = (degrees: float) : float =>
+  degrees /. 360.0 *. (pi *. 2.0);
+
+let isNone = (item: option('a)): bool => 
+  switch (item) {
+    | None => true
+    | _ => false
     };
-  }, Board.getBoardTiles(board), 0);
+
+/* need an id function even though it won't get used */
+let sequence = (id: 'a, list: list(option('a))): option(list('a)) => {
+  let nothings = List.filter(isNone, list);
+  if (List.length(nothings) > 0) {
+    None;
+  } else {
+    Some(
+      List.map(item => switch item {
+      | Some(thing) => thing
+      | _ => id
+      }, list)
+    );
+  };
 };
 
-/* check leftovers on board and whether player is over finish tile */
-let checkLevelIsCompleted = (gameState: gameState): bool => {
-  let collectable = countCollectable(gameState.board);
-  let playerCount: int = countPlayers(gameState.players);
-  (collectable < 1 && playerCount < 2);
-};
+
+
 
 /* 
 export class Utils {

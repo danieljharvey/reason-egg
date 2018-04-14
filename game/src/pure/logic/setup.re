@@ -1,4 +1,5 @@
 open EggTypes;
+open JsTypes;
 
 let createPlayer = (x: int, y: int, playerType: playerType, id: int) : option(player) => {
     let coords = { ...Player.defaultCoords, x, y };
@@ -45,7 +46,7 @@ let defaultGameState = (board: board): gameState => {
 let setupEnvironment = (gameState: gameState, env): gameStuff => 
 {    
     {
-        tileImages: Tiles.loadTileImages(env),
+        tileImages: DrawTile.loadTileImages(Tiles.tiles, env),
         playerImages: Player.loadPlayerImages(Player.playerTypes, env),
         boardAngle: 0.0,
         gameState: gameState,

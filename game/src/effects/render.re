@@ -1,6 +1,7 @@
 open Reprocessing;
 
 open EggTypes;
+open JsTypes;
 
 open EggConstants;
 
@@ -84,7 +85,7 @@ let renderGeneric =
 
 
 let renderPlayer = (drawAngle: float, gameStuff: gameStuff, env, player: player) => 
-  switch (Tiles.getTileImageByID(gameStuff.playerImages, player.filename)) {
+  switch (DrawTile.getTileImageByID(gameStuff.playerImages, player.filename)) {
   | Some(imageAsset) => {
     List.iter(drawPlayer => {
       renderGeneric(imageAsset, drawPlayer.coords, drawPlayer.size, drawAngle, drawPlayer.currentFrame, env);
@@ -101,7 +102,7 @@ let drawPlayers = (drawAngle: float, gameStuff, env) =>
 
 
 let renderTile = (drawAngle: float, gameStuff, env, tile: tile) => {
-  switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
+  switch (DrawTile.getTileImageByID(gameStuff.tileImages, tile.filename)) {
   | Some(imageAsset) => {
     let tileCoords = {
       ...Player.defaultCoords,

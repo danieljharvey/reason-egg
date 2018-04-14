@@ -1,0 +1,10 @@
+{
+    "name": "reason-egg-tests",
+    "scripts": {
+        "build": "bsb -make-world",
+        "test": "yarn build && node lib/js/src/TestIndex.js"
+    },
+    "devDependencies": {
+        "bs-platform": "^2.2.3"
+    }
+}

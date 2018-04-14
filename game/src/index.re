@@ -2,6 +2,8 @@ open Reprocessing;
 
 open EggTypes;
 
+open JsTypes;
+
 open EggConstants;
 
 let setup = (env) => {
