@@ -218,7 +218,6 @@ let getTileImageByID =
     tileImage =>
       switch tileImage {
       | (imgName, _) => imgName === filename
-      | (_, _) => false
       },
     tileImages
   );

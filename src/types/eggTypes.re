@@ -1,6 +1,6 @@
-open EggConstants;
-
 type imageAsset = (string, Reprocessing_Types.Types.imageT);
+
+type fillColour = Reprocessing_Types.Types.colorT;
 
 type coords = {
   x: int,
