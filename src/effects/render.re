@@ -89,12 +89,13 @@ let drawTile = (drawAngle: float, gameStuff, env, tile: tile, imageAsset: imageA
   );
   let (_, image) = imageAsset;
   let offset = (-1) * tileSize / 2;
+  let texPosX = tile.currentFrame * tileSize;
   Draw.subImage(
     image,
     ~pos=(offset, offset),
     ~width=tileSize,
     ~height=tileSize,
-    ~texPos=(0, 0),
+    ~texPos=(texPosX, 0),
     ~texWidth=tileSize,
     ~texHeight=tileSize,
     env

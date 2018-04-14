@@ -36,7 +36,8 @@ let defaultGameState = (board: board): gameState => {
         drawAngle: 0.0,
         outcome: "",
         gameAction: Playing,
-        boardAngle: 0.0
+        boardAngle: 0.0,
+        currentFrame: 0
     };
 };
 

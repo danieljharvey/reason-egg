@@ -25,7 +25,10 @@ type tile = {
   createPlayer: playerType,
   render: bool,
   x: int,
-  y: int
+  y: int,
+  frames: int,
+  currentFrame: int,
+  cycleSpeed: int
 };
 
 type board = list(list(tile));
@@ -62,6 +65,7 @@ type gameState = {
   drawAngle: float,
   outcome: string,
   boardAngle: float,
+  currentFrame: int,
   gameAction
 };
 

@@ -11,6 +11,9 @@ let idTile: tile = {
   title: "",
   x:0,
   y:0,
+  frames: 1,
+  currentFrame: 0,
+  cycleSpeed: 1
 };
 
 let tiles: list(EggTypes.tile) = [
@@ -83,7 +86,7 @@ let tiles: list(EggTypes.tile) = [
   },
   {
     ...idTile,
-    action: CompleteLevel,
+    render: false,
     background: true,
     createPlayer: Egg,
     id: 12,
@@ -103,7 +106,7 @@ let tiles: list(EggTypes.tile) = [
     action: Teleport,
     background: true,
     id: 14,
-    filename: "tiles/door.png",
+    filename: "tiles/teleport.png",
     title: "Door"
   },
   {
@@ -181,7 +184,24 @@ let tiles: list(EggTypes.tile) = [
     action: SplitEggs,
     filename: "tiles/egg-splitter.png",
     title: "It is the egg splitter"
-  }
+  },
+  {
+    ...idTile,
+    background: true,
+    id: 25,
+    filename: "tiles/door-closed.png",
+    title: "Closed Door"
+  },
+  {
+    ...idTile,
+    action: CompleteLevel,
+    background: true,
+    id: 26,
+    filename: "tiles/door-open.png",
+    title: "Open Door",
+    frames: 18,
+    cycleSpeed: 10
+  },
 ];
 
 let blankTile = List.hd(tiles);

@@ -100,6 +100,7 @@ let doGameMove = (gameState: gameState, deltaTime: float): gameState => {
   |> EggAction.checkAllPlayerTileActions
   |> EggCollisions.checkAll
   |> BoardCollisions.checkAll
+  |> EggFrames.cycleAll
   |> checkNearlyFinished
 };
 
