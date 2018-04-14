@@ -12,6 +12,7 @@
     "web:serve": "python -m SimpleHTTPServer"
   },
   "dependencies": {
+    "@stroiman/respect": "^0.7.2",
     "Reasongl": "bsansouci/reasongl",
     "Reprocessing": "schmavery/reprocessing"
   },

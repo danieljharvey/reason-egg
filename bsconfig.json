@@ -4,10 +4,17 @@
     {
       "dir": "src",
       "subdirs": true
+    },
+    {
+      "dir": "tests",
+      "type": "dev"
     }
   ],
   "bs-dependencies": [
     "reprocessing"
+  ],
+  "bs-dev-dependencies": [
+    "@stroiman/respect"
   ],
   "entries": [
     {
