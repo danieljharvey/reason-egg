@@ -2,7 +2,7 @@
     "name": "reason-egg-tests",
     "scripts": {
         "build": "bsb -make-world",
-        "test": "yarn build && node lib/js/src/TestIndex.bs.js"
+        "test": "yarn build && jest"
     },
     "devDependencies": {
         "bs-platform": "^2.2.3"
