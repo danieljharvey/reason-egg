@@ -100,7 +100,7 @@ test("Change board if player has moved", () => {
 
   let output = EggAction.checkPlayerTileAction(player, board, 0, "");
   
-  expect(output.board) |> Expect.not_ |> toEqual(board);
+  expect(output.board) |> Expect.not_ |> toEqual(board) |> ignore;
 
   expect(output.score) |> toEqual(100);
 });
