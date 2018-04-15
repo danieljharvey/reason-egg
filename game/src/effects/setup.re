@@ -1,4 +1,5 @@
 open EggTypes;
+open JsTypes;
 
 let createPlayer = (x: int, y: int, playerType: playerType, id: int) : option(player) => {
     let coords = { ...Player.defaultCoords, x, y };
@@ -6,7 +7,7 @@ let createPlayer = (x: int, y: int, playerType: playerType, id: int) : option(pl
         ...Player.defaultCoords,
         x: 1
     };
-    EggUtils.optionMap(player => {
+    Utils.optionMap(player => {
         {
             ...player, 
             coords,  
@@ -45,8 +46,8 @@ let defaultGameState = (board: board): gameState => {
 let setupEnvironment = (gameState: gameState, env): gameStuff => 
 {    
     {
-        tileImages: Tiles.loadTileImages(env),
-        playerImages: Player.loadPlayerImages(Player.playerTypes, env),
+        tileImages: DrawTile.loadTileImages(Tiles.tiles, env),
+        playerImages: DrawPlayer.loadPlayerImages(Player.playerTypes, env),
         boardAngle: 0.0,
         gameState: gameState,
         lastAngleChange: 0.0

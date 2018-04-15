@@ -1,6 +1,7 @@
 open Reprocessing;
 
 open EggTypes;
+open JsTypes;
 
 let colourFloat = (color: int): float => {
   float_of_int(color) /. 255.0;

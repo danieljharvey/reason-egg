@@ -1,13 +1,11 @@
-type imageAsset = (string, Reprocessing_Types.Types.imageT);
-
-type fillColour = Reprocessing_Types.Types.colorT;
-
 type coords = {
   x: int,
   y: int,
   offsetX: int,
   offsetY: int
 };
+
+type eggKeycode = KeyLeft | KeyRight | KeyUnknown;
 
 type tileAction = NoAction | Teleport | ClosedDoor | CompleteLevel | PinkSwitch | GreenSwitch | SplitEggs | Collectable(int);
 
@@ -72,12 +70,3 @@ type gameState = {
   gameAction,
   visualMode
 };
-
-type gameStuff = {
-  playerImages: list(imageAsset),
-  tileImages: list(imageAsset),
-  boardAngle: float,
-  lastAngleChange: float,
-  gameState: gameState,
-};
-

@@ -25,12 +25,6 @@ let defaultPlayer: player = {
   size: 1.0
 };
 
-let loadPlayerImages = (players: list(player), env) =>
-  List.map(
-    (player: player) => EggUtils.loadImage(env, player.filename),
-    players
-  );
-
 let playerTypes: list(player) = [
   {
     ...defaultPlayer,
@@ -109,6 +103,6 @@ let playerTypes: list(player) = [
   }
 ];
 
-let getPlayerByType = (playerType: playerType) => EggUtils.find((player: player) => player.playerType === playerType, playerTypes);
+let getPlayerByType = (playerType: playerType) => Utils.find((player: player) => player.playerType === playerType, playerTypes);
 
-let getPlayerTypeByValue = (value: int) => EggUtils.find((player: player) => player.value === value, playerTypes);
+let getPlayerTypeByValue = (value: int) => Utils.find((player: player) => player.value === value, playerTypes);

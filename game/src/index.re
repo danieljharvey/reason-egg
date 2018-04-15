@@ -2,6 +2,8 @@ open Reprocessing;
 
 open EggTypes;
 
+open JsTypes;
+
 open EggConstants;
 
 let setup = (env) => {
@@ -81,10 +83,18 @@ let draw = (gameStuff: gameStuff, env): gameStuff => {
   newGameStuff;
 };
 
+let convertKeypress = (keyCode: Reprocessing_Events.keycodeT): eggKeycode => {
+  switch (keyCode) {
+  | Left => KeyLeft
+  | Right => KeyRight
+  | _ => KeyUnknown
+  };
+};
+
 let keyTyped = (gameStuff: gameStuff, env) => {
   {
     ...gameStuff,
-    gameState: EggGame.processRotate(gameStuff.gameState, Env.keyCode(env))
+    gameState: EggGame.processRotate(gameStuff.gameState, convertKeypress(Env.keyCode(env)))
   };
 };
 

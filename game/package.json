@@ -8,6 +8,8 @@
     "build:web": "bsb -make-world -backend js",
     "build:web:watch": "bsb -clean-world -make-world -w -backend js",
     "build:native": "bsb -make-world -backend native",
+    "build:tests": "bsb -make-world -backend tests",
+    "test": "yarn build:tests && node lib/js/tests/TestIndex.js",
     "clean": "bsb -clean-world",
     "web:serve": "python -m SimpleHTTPServer"
   },

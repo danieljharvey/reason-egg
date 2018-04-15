@@ -1,8 +1,14 @@
 open Reprocessing;
 
 open EggTypes;
+open JsTypes;
 
 open EggConstants;
+
+let pi = 3.14159265358979323846;
+
+let degreesToRadians = (degrees: float) : float =>
+  degrees /. 360.0 *. (pi *. 2.0);
 
 let getScreenScale = (screenSize, boardSize) => {
   let (width, _) = screenSize;
@@ -27,7 +33,7 @@ let doRotate = (boardAngle: float, env) =>
         ~y=center,
         env
       );
-      Draw.rotate(EggUtils.degreesToRadians(boardAngle), env);
+      Draw.rotate(degreesToRadians(boardAngle), env);
       Draw.translate(
         ~x=(-1.0) *. center,
         ~y=(-1.0) *. center,
@@ -44,7 +50,7 @@ let rotateTransform = (coords: coords, tileSize, angleDegrees, env) => {
     ~x=middleLeft,
     ~y=middleTop,env
   );
-  Draw.rotate(EggUtils.degreesToRadians(angleDegrees), env);
+  Draw.rotate(degreesToRadians(angleDegrees), env);
   env;
 };
 
@@ -84,7 +90,7 @@ let renderGeneric =
 
 
 let renderPlayer = (drawAngle: float, gameStuff: gameStuff, env, player: player) => 
-  switch (Tiles.getTileImageByID(gameStuff.playerImages, player.filename)) {
+  switch (DrawTile.getTileImageByID(gameStuff.playerImages, player.filename)) {
   | Some(imageAsset) => {
     List.iter(drawPlayer => {
       renderGeneric(imageAsset, drawPlayer.coords, drawPlayer.size, drawAngle, drawPlayer.currentFrame, env);
@@ -101,7 +107,7 @@ let drawPlayers = (drawAngle: float, gameStuff, env) =>
 
 
 let renderTile = (drawAngle: float, gameStuff, env, tile: tile) => {
-  switch (Tiles.getTileImageByID(gameStuff.tileImages, tile.filename)) {
+  switch (DrawTile.getTileImageByID(gameStuff.tileImages, tile.filename)) {
   | Some(imageAsset) => {
     let tileCoords = {
       ...Player.defaultCoords,

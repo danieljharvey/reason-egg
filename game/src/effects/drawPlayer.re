@@ -66,3 +66,9 @@ let getDrawPlayers = (boardSize: int, player: player): list(player) => {
   | _ => [player]
   }
 };
+
+let loadPlayerImages = (players: list(player), env) =>
+  List.map(
+    (player: player) => RenderUtils.loadImage(env, player.filename),
+    players
+  );

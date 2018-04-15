@@ -9,15 +9,15 @@ let createBoardFromIDs = (idBoard: list(list(int))): list(list(option(tile))) =>
     (x, row) =>
       List.mapi(
         (y, item) =>
-          EggUtils.optionMap(setTileLocation(x, y), Tiles.getTileByID(item)),
+          Utils.optionMap(setTileLocation(x, y), Tiles.getTileByID(item)),
         row
       ),
     idBoard
   );
 
 let cleanBoard = (optBoard: list(list(option(tile)))): board => {
-  let validRows = List.map(EggUtils.sequence(Tiles.idTile), optBoard);
-  let validBoard = EggUtils.sequence([], validRows);
+  let validRows = List.map(Utils.sequence(Tiles.idTile), optBoard);
+  let validBoard = Utils.sequence([], validRows);
   switch (validBoard) {
   | Some(board) => board
   | _ => []
@@ -74,4 +74,4 @@ let getActualPosition = (coords: coords) : fullCoords => {
     x: (coords.x * EggConstants.tileSize) + coords.offsetX,
     y: (coords.y * EggConstants.tileSize) + coords.offsetY
   };
-}
+};

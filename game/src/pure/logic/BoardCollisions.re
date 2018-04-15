@@ -6,7 +6,7 @@ type splitItem = {
 };
 
 let playerFromItem = (player: player, item: splitItem): option(player) => {
-  EggUtils.optionMap(playerType => {
+  Utils.optionMap(playerType => {
     {
       ...playerType,
       coords: player.coords,
@@ -43,7 +43,7 @@ let getValuesAndDirections = (value: int): list(splitItem) => {
 };
 
 let splitPlayer = (player: player): option(list(player)) => {
-  EggUtils.sequence(
+  Utils.sequence(
     Player.defaultPlayer,  
     List.map(playerFromItem(player),getValuesAndDirections(player.value))
   );

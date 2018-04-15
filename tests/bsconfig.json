@@ -1,0 +1,43 @@
+{
+    "name": "reason-egg-tests",
+    "reason": {
+        "react-jsx": 2
+    },
+    "sources": [
+        {
+            "dir": "src",
+            "subdirs": true
+        },
+        {
+            "dir": "../game/src/pure",
+            "subdirs": true
+        },
+        {
+            "dir": "../game/src/constants",
+            "subdirs": true
+        },
+        {
+            "dir": "../game/src/static",
+            "subdirs": true
+        },
+        {
+            "dir": "../game/src/types",
+            "subdirs": true
+        }
+    ],
+    "package-specs": [
+        {
+            "module": "commonjs",
+            "in-source": false
+        }
+    ],
+    "suffix": ".bs.js",
+    "namespace": true,
+    "bs-dependencies": [
+        "@glennsl/bs-jest"
+    ],
+    "refmt": 3,
+    "warnings": {
+        "error": "+5"
+    }
+}
