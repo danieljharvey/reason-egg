@@ -5,7 +5,6 @@ node_js:
   - "8"
 install:
     - cd tests
-    - npm install -g bsb-platform
     - npm install
 script:
   - npm test
