@@ -61,6 +61,7 @@ let offset = (-1) * tileSize / 2;
 let renderGeneric =
     (
       imageAsset: imageAsset,
+      tint: option(color),
       coords: coords,
       size: float,
       drawAngle: float,
@@ -71,6 +72,10 @@ let renderGeneric =
   Draw.pushMatrix(env);
   rotateTransform(coords, tileSize, (-1.0) *. drawAngle, env);
   Draw.scale(~x=size, ~y=size, env);
+  switch tint {
+    | Some (color) => Draw.tint(RenderUtils.convertColor(color), env)
+    | _ => ()
+  };
   
   let (_, image) = imageAsset;
 
@@ -84,16 +89,17 @@ let renderGeneric =
     ~texHeight=tileSize,
     env
   );
+  Draw.noTint(env);
   Draw.popMatrix(env);
   ();
 };
 
 
-let renderPlayer = (drawAngle: float, gameStuff: gameStuff, env, player: player) => 
+let renderPlayer = (drawAngle: float, tint: option(color), gameStuff: gameStuff, env, player: player) => 
   switch (DrawTile.getTileImageByID(gameStuff.playerImages, player.filename)) {
   | Some(imageAsset) => {
     List.iter(drawPlayer => {
-      renderGeneric(imageAsset, drawPlayer.coords, drawPlayer.size, drawAngle, drawPlayer.currentFrame, env);
+      renderGeneric(imageAsset, tint, drawPlayer.coords, drawPlayer.size, drawAngle, drawPlayer.currentFrame, env);
     }, DrawPlayer.getDrawPlayers(
       Board.getBoardSize(gameStuff.gameState.board),
       player
@@ -102,11 +108,11 @@ let renderPlayer = (drawAngle: float, gameStuff: gameStuff, env, player: player)
   | _ => ()
   };
 
-let drawPlayers = (drawAngle: float, gameStuff, env) =>
-  List.map(renderPlayer(drawAngle, gameStuff, env), gameStuff.gameState.players);
+let drawPlayers = (drawAngle: float, tint: option(color), gameStuff, env) =>
+  List.map(renderPlayer(drawAngle, tint, gameStuff, env), gameStuff.gameState.players);
 
 
-let renderTile = (drawAngle: float, gameStuff, env, tile: tile) => {
+let renderTile = (drawAngle: float, tint: option(color), gameStuff, env, tile: tile) => {
   switch (DrawTile.getTileImageByID(gameStuff.tileImages, tile.filename)) {
   | Some(imageAsset) => {
     let tileCoords = {
@@ -114,14 +120,14 @@ let renderTile = (drawAngle: float, gameStuff, env, tile: tile) => {
       x: tile.x, 
       y: tile.y
     };
-    renderGeneric(imageAsset, tileCoords, 1.0, drawAngle, tile.currentFrame, env);
+    renderGeneric(imageAsset, tint, tileCoords, 1.0, drawAngle, tile.currentFrame, env);
   }
   | _ => ()
   };
 };
 
-let drawTiles = (drawAngle: float, gameStuff, env) => {
-  List.map(renderTile(drawAngle, gameStuff, env), Board.getDrawTiles(gameStuff.gameState.board));
+let drawTiles = (drawAngle: float, tint: option(color), gameStuff, env) => {
+  List.map(renderTile(drawAngle, tint, gameStuff, env), Board.getDrawTiles(gameStuff.gameState.board));
   gameStuff;
 };
 
@@ -130,15 +136,16 @@ let render = (env, gameStuff: gameStuff) => {
   let scale = getScreenScale(screenSize, boardSize);
   let boardAngle = gameStuff.boardAngle +. gameStuff.gameState.boardAngle;
   let drawAngle = -1.0 *. gameStuff.gameState.drawAngle;
+  let tint = Tint.getTint(gameStuff.gameState);
 
   Draw.pushMatrix(env);
-  Background.clearBackground(gameStuff, env);
+  DrawBackground.clearBackground(gameStuff, env);
 
   doRotate(boardAngle, env);
   Draw.scale(~x=scale, ~y=scale, env);
   
-  drawTiles(drawAngle, gameStuff, env) |> ignore;
-  drawPlayers(0.0, gameStuff, env) |> ignore;
+  drawTiles(drawAngle, tint, gameStuff, env) |> ignore;
+  drawPlayers(0.0, tint, gameStuff, env) |> ignore;
   
   Draw.popMatrix(env);
 };

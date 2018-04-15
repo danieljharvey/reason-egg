@@ -13,7 +13,7 @@ type playerType = Nope | Egg | RedEgg | BlueEgg | YellowEgg | SilverEgg | Rainbo
 
 type gameAction = Playing | Paused | TurnLeft | TurnRight | RotatingLeft(float) | RotatingRight(float);
 
-type visualMode = Standard | MegaVibes;
+type visualMode = Standard | MegaVibes | NightTime | GreyScale;
 
 type tile = {
   id: int,
@@ -69,4 +69,11 @@ type gameState = {
   currentFrame: int,
   gameAction,
   visualMode
+};
+
+type color = {
+  r: float,
+  g: float,
+  b: float,
+  a: float
 };

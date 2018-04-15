@@ -39,7 +39,7 @@ let defaultGameState = (board: board): gameState => {
         gameAction: Playing,
         boardAngle: 0.0,
         currentFrame: 0,
-        visualMode: Standard
+        visualMode: GreyScale
     };
 };
 
