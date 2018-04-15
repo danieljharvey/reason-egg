@@ -1,48 +1,40 @@
-import { Collisions } from "../Collisions";
+open EggTypes;
+open Jest;
 
-import { Coords } from "../../objects/Coords";
-import { Player } from "../../objects/Player";
+describe("Collisions", () => {
+  test("Ignores same player collision test", () => {
+    open Expect;
 
-import { fromJS, List } from "immutable";
+    let player1 = Player.defaultPlayer;
 
-const playerTypes = {
-  horse: {
-    value: 1
-  },
-  ultimateHorse: {
-    value: 2
-  }
-};
-
-test("Ignores same player collision test", () => {
-  const player1 = new Player();
-
-  const collisions = new Collisions();
-
-  const result = collisions.checkCollision(player1, player1);
-  expect(result).toEqual(false);
-});
-
-test("Vertical collision works", () => {
-  const player1 = new Player({
-    coords: new Coords({ x: 1, y: 1, offsetX: 0, offsetY: 0 }),
-    falling: true,
-    id: 1,
-    type: "Horse"
+    expect(EggCollisions.checkCollision(player1, player1)) |> toEqual(false);
   });
 
-  const player2 = new Player({
-    coords: new Coords({ x: 1, y: 1, offsetX: 0, offsetY: 0 }),
-    falling: false,
-    id: 2,
-    type: "Horse"
+  test("Vertical collision works", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 1, y: 1, offsetX: 0, offsetY: 0 },
+      falling: true,
+      id: 1,
+      playerType: Egg
+    };
+  
+    let player2: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 1, y: 1, offsetX: 0, offsetY: 0 },
+      falling: false,
+      id: 2,
+      playerType: Egg
+    };
+  
+    expect(EggCollisions.checkCollision(player1, player2)) |> toEqual(true);
   });
-
-  const collisions = new Collisions();
-
-  const result = collisions.checkCollision(player1, player2);
-  expect(result).toEqual(true);
 });
+
+/*
+
 
 test("Too far for horizontal collision", () => {
   const player1 = new Player({
@@ -428,3 +420,5 @@ test("Combine player lists", () => {
 
   expect(actual).toEqual(expected);
 });
+
+*/

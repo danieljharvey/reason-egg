@@ -5,23 +5,23 @@
     },
     "sources": [
         {
-            "dir": "src",
+            "dir": "tests",
             "subdirs": true
         },
         {
-            "dir": "../game/src/pure",
+            "dir": "game/src/pure",
             "subdirs": true
         },
         {
-            "dir": "../game/src/constants",
+            "dir": "game/src/constants",
             "subdirs": true
         },
         {
-            "dir": "../game/src/static",
+            "dir": "game/src/static",
             "subdirs": true
         },
         {
-            "dir": "../game/src/types",
+            "dir": "game/src/types",
             "subdirs": true
         }
     ],
