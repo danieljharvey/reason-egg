@@ -1,5 +1,7 @@
 # Reason Egg
 
+![travis](https://travis-ci.org/danieljharvey/reason-egg.svg?branch=master)
+
 ### Port of hopeless game It Is The Egg to Reprocessing.
 
 Play the original game here: http://itistheegg.com/
