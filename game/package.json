@@ -14,7 +14,6 @@
     "web:serve": "python -m SimpleHTTPServer"
   },
   "dependencies": {
-    "Reasongl": "bsansouci/reasongl",
     "Reprocessing": "schmavery/reprocessing"
   },
   "devDependencies": {
