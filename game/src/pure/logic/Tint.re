@@ -38,3 +38,7 @@ let getTint = (gameState: gameState) : option(color) =>
     | MegaVibes => Some(vibesTint(gameState))
     | _ => None
     };
+
+let getTintForLevelID = (levelID: int): visualMode => {
+    (levelID mod 3 == 0) ? NightTime : (levelID mod 2 == 0) ? GreyScale : Standard;
+};

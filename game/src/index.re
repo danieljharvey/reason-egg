@@ -9,7 +9,7 @@ open EggConstants;
 let setup = (env) => {
   let (width, height) = screenSize;
   Env.size(~width, ~height, env);
-  let gameState = Setup.defaultGameState(Board.board);
+  let gameState = EggGame.loadGameState(1);
   Setup.setupEnvironment(gameState, env);
 };
 
@@ -21,6 +21,7 @@ let calcSway = (boardAngle: float, lastAngleChange: float, rotations: (int, int)
   let newChange = (lastAngleChange /. 2.0) +. (0.02 *. float_of_int(rotateWeight(rotations)));
   let random = (newChange < 0.01) ? Random.float(0.2) -. 0.1 : 0.0;
   boardAngle +. newChange +. random;
+  0.00;
 };
 
 let updateGameStuff = (gameStuff: gameStuff, deltaTime: float): gameStuff => {

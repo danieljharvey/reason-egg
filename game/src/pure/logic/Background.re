@@ -10,6 +10,15 @@ let getVibesBackgroundColour = (gameState: gameState): color => {
   };
 };
 
+let getNightTimeBackgroundColour = (gameState: gameState): color => {
+  {
+    r: 0.3 +. colourFloat(getFigure(128, 6.0, gameState.currentFrame)),
+    g: 0.3 +. colourFloat(getFigure(128, 5.0, gameState.currentFrame)),
+    b: 0.3 +. colourFloat(getFigure(128, 4.0, gameState.currentFrame)),
+    a: 0.4
+  };
+};
+
 let getStandardBackgroundColour = (gameState: gameState): color => {
   {
     r: colourFloat(getFigure(64, 10.0, gameState.currentFrame)),
@@ -25,14 +34,14 @@ let getGreyScaleBackgroundColour = (gameState: gameState): color => {
     r: amount,
     g: amount,
     b: amount,
-    a: 0.1
+    a: 0.3
   };
 };
 
 let getBackgroundColour = (gameState: gameState): color => {
   switch (gameState.visualMode) {
   | Standard => getStandardBackgroundColour(gameState)
-  | NightTime => getVibesBackgroundColour(gameState)
+  | NightTime => getNightTimeBackgroundColour(gameState)
   | MegaVibes => getVibesBackgroundColour(gameState)
   | GreyScale => getGreyScaleBackgroundColour(gameState)
   }

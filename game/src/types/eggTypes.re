@@ -68,7 +68,8 @@ type gameState = {
   boardAngle: float,
   currentFrame: int,
   gameAction,
-  visualMode
+  visualMode,
+  levelID: int
 };
 
 type color = {
