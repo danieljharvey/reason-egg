@@ -1,7 +1,5 @@
 open EggTypes;
 
-let idBoard = One.board;
-
 let setTileLocation = (x: int, y: int, tile: tile) => {...tile, x, y};
 
 let createBoardFromIDs = (idBoard: list(list(int))): list(list(option(tile))) =>
@@ -24,7 +22,11 @@ let cleanBoard = (optBoard: list(list(option(tile)))): board => {
   };
 };
 
-let board = cleanBoard(createBoardFromIDs(idBoard));
+let getLevel = (levelID: int): board => {
+  let numLevels = List.length(EggLevels.levels);
+  let chooseLevelID = (levelID < 0 || levelID >= numLevels) ? 0 : levelID;
+  cleanBoard(createBoardFromIDs(List.nth(EggLevels.levels, chooseLevelID)));
+};
 
 let getBoardTiles = (board: board): list(tile) => {
     List.concat(board);

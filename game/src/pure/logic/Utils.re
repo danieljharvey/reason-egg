@@ -52,6 +52,15 @@ let optionMap = (f, option: option('a)) =>
   | _ => None
   };
 
+let colourFloat = (color: int): float => {
+  float_of_int(color) /. 255.0;
+};
+
+let getFigure = (maximum: int, multiplier: float, frame: int): int => {
+  let newFigure = int_of_float(float_of_int(frame) /. multiplier) mod (maximum * 2);
+  (newFigure > maximum) ? maximum - (newFigure mod maximum) : newFigure;
+};
+
 let find = (f, list) => {
   let found = List.filter(f, list);
   List.length(found) === 0 ? None : Some(List.hd(found));

@@ -28,7 +28,8 @@ let createPlayers = (board: board): list(player) => {
     }, Board.getBoardTiles(board), []);
 };
 
-let defaultGameState = (board: board): gameState => {
+let loadGameState = (levelID: int): gameState => {
+    let board = Board.getLevel(levelID);
     {
         players: createPlayers(board),
         board,
@@ -39,7 +40,8 @@ let defaultGameState = (board: board): gameState => {
         gameAction: Playing,
         boardAngle: 0.0,
         currentFrame: 0,
-        visualMode: Standard
+        visualMode: Tint.getTintForLevelID(levelID),
+        levelID
     };
 };
 
