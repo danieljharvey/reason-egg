@@ -60,40 +60,6 @@ let resetOutcome = (gameState: gameState) : gameState => {
     outcome: ""
 };
 
-let doGameMove = (gameState: gameState, deltaTime: float): gameState => {
-  resetOutcome(gameState)
-  |> EggMovement.doCalcs(deltaTime)
-  |> EggAction.checkAllPlayerTileActions
-  |> EggCollisions.checkAll
-  |> BoardCollisions.checkAll
-  |> EggFrames.cycleAll
-  |> CompleteLevel.check
-};
-
-let doAction = (
-  gameState: gameState,
-  deltaTime: float
-): gameState => {
-  switch (gameState.gameAction) {
-  | TurnLeft => doRotate(gameState,false)
-  | TurnRight => doRotate(gameState, true)
-  | Playing => doGameMove(gameState, deltaTime)
-  | _ => gameState
-  };
-};
-
-let processRotate = (gameState: gameState, keyCode: eggKeycode): gameState => {
-  (gameState.gameAction === Playing) ? 
-    {
-      ...gameState,
-      gameAction: switch (keyCode) {
-        | KeyLeft => RotatingLeft(0.0)
-        | KeyRight => RotatingRight(0.0)
-        | _ => gameState.gameAction
-        }
-    } : gameState;
-};
-
 
 let createPlayer = (x: int, y: int, playerType: playerType, id: int) : option(player) => {
   let coords = { ...Player.defaultCoords, x, y };
@@ -122,6 +88,7 @@ let createPlayers = (board: board): list(player) => {
   }, Board.getBoardTiles(board), []);
 };
 
+
 let loadGameState = (levelID: int): gameState => {
   let board = Board.getLevel(levelID);
   {
@@ -138,3 +105,45 @@ let loadGameState = (levelID: int): gameState => {
       levelID
   };
 };
+
+let nextLevel = (gameState: gameState): gameState => {
+  (gameState.outcome === "completeLevel") ? {
+    loadGameState(gameState.levelID + 1)
+   } : gameState;
+};
+
+let doGameMove = (gameState: gameState, deltaTime: float): gameState => {
+  resetOutcome(gameState)
+  |> EggMovement.doCalcs(deltaTime)
+  |> EggAction.checkAllPlayerTileActions
+  |> EggCollisions.checkAll
+  |> BoardCollisions.checkAll
+  |> EggFrames.cycleAll
+  |> CompleteLevel.check
+  |> nextLevel
+};
+
+let doAction = (
+  gameState: gameState,
+  deltaTime: float
+): gameState => {
+  switch (gameState.gameAction) {
+  | TurnLeft => doRotate(gameState,false)
+  | TurnRight => doRotate(gameState, true)
+  | Playing => doGameMove(gameState, deltaTime)
+  | _ => gameState
+  };
+};
+
+let processRotate = (gameState: gameState, keyCode: eggKeycode): gameState => {
+  (gameState.gameAction === Playing) ? 
+    {
+      ...gameState,
+      gameAction: switch (keyCode) {
+        | KeyLeft => RotatingLeft(0.0)
+        | KeyRight => RotatingRight(0.0)
+        | _ => gameState.gameAction
+        }
+    } : gameState;
+};
+

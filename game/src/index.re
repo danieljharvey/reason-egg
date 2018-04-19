@@ -9,7 +9,7 @@ open EggConstants;
 let setup = (env) => {
   let (width, height) = screenSize;
   Env.size(~width, ~height, env);
-  let gameState = EggGame.loadGameState(1);
+  let gameState = EggGame.loadGameState(0);
   Setup.setupEnvironment(gameState, env);
 };
 
