@@ -28,6 +28,11 @@ let getLevel = (levelID: int): board => {
   cleanBoard(createBoardFromIDs(List.nth(EggLevels.levels, chooseLevelID)));
 };
 
+let getRandomLevelID = (): int => {
+  let numLevels = List.length(EggLevels.levels);
+  Random.int(numLevels);
+};
+
 let getBoardTiles = (board: board): list(tile) => {
     List.concat(board);
 };
