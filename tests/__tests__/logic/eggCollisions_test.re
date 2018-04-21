@@ -31,77 +31,91 @@ describe("Collisions", () => {
   
     expect(EggCollisions.checkCollision(player1, player2)) |> toEqual(true);
   });
+
+  test("Too far for horizontal collision", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 5, y: 5, offsetX: 1, offsetY: 0 },
+      falling: false,
+      id: 1,
+      playerType: RedEgg
+    };
+  
+    let player2: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 6, y: 5, offsetX: -32, offsetY: 0 },
+      falling: false,
+      id: 2,
+      playerType: RedEgg
+    };
+  
+    /* difference of 31 */
+  
+    expect(EggCollisions.checkCollision(player1, player2)) |> toEqual(false);
+  });
+
+  test("Close enough for RHS horizontal collision", () => {
+
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 5, y: 5, offsetX: 24, offsetY: 0 },
+      falling: false,
+      id: 1,
+      playerType: RedEgg
+    };
+  
+    let player2: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 6, y: 5, offsetX: -24, offsetY: 0 },
+      falling: false,
+      id: 2,
+      playerType: RedEgg
+    };
+
+  
+    /* difference of 20 */
+  
+    expect(EggCollisions.checkCollision(player1, player2)) |> toEqual(true);
+  });
+
+
+  test("Close enough for LHS horizontal collision", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 6, y: 5, offsetX: -80, offsetY: 0 },
+      falling: false,
+      id: 1,
+      playerType: RedEgg
+    };
+  
+    let player2: player = {
+      ...Player.defaultPlayer,
+      coords: { x: 5, y: 5, offsetX: 0, offsetY: 0 },
+      falling: false,
+      id: 2,
+      playerType: RedEgg
+    };
+  
+    /* difference of 19 */
+  
+    expect(EggCollisions.checkCollision(player1, player2)) |> toEqual(true);
+  });
 });
 
 /*
 
 
-test("Too far for horizontal collision", () => {
-  const player1 = new Player({
-    coords: new Coords({ x: 5, y: 5, offsetX: 1, offsetY: 0 }),
-    falling: false,
-    id: 1,
-    type: "Horse"
-  });
-  const player2 = new Player({
-    coords: new Coords({ x: 6, y: 5, offsetX: -70, offsetY: 0 }),
-    falling: false,
-    id: 2,
-    type: "Horse"
-  });
 
-  // difference of 30
 
-  const collisions = new Collisions();
 
-  const result = collisions.checkCollision(player1, player2);
-  expect(result).toEqual(false);
-});
 
-test("Close enough for RHS horizontal collision", () => {
-  const player1 = new Player({
-    coords: new Coords({ x: 5, y: 5, offsetX: 41, offsetY: 0 }),
-    falling: false,
-    id: 1,
-    type: "Horse"
-  });
-  const player2 = new Player({
-    coords: new Coords({ x: 6, y: 5, offsetX: -41, offsetY: 0 }),
-    falling: false,
-    id: 2,
-    type: "Horse"
-  });
 
-  // difference of 18
-
-  const collisions = new Collisions();
-
-  const result = collisions.checkCollision(player1, player2);
-  expect(result).toEqual(true);
-});
-
-test("Close enough for LHS horizontal collision", () => {
-  const player1 = new Player({
-    coords: new Coords({ x: 6, y: 5, offsetX: -80, offsetY: 0 }),
-    falling: false,
-    id: 1,
-    type: "Horse"
-  });
-  const player2 = new Player({
-    coords: new Coords({ x: 5, y: 5, offsetX: 0, offsetY: 0 }),
-    falling: false,
-
-    id: 2,
-    type: "Horse"
-  });
-
-  // difference of 19
-
-  const collisions = new Collisions();
-
-  const result = collisions.checkCollision(player1, player2);
-  expect(result).toEqual(true);
-});
 
 test("Ignores collision with zero-value player", () => {
   const player1 = new Player({
