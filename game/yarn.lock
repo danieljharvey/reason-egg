@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-Reasongl@bsansouci/reasongl, "Reasongl@github:bsansouci/reasongl":
+"Reasongl@github:bsansouci/reasongl":
   version "0.2.0"
   resolved "https://codeload.github.com/bsansouci/reasongl/tar.gz/ded760557e03a58d1edb3cc5e93d7ccd54bfd8ec"
   dependencies:

@@ -64,5 +64,7 @@ let levelIsCompletedMode = (gameState: gameState) : gameState => {
 
 let check = (
   gameState: gameState
-): gameState => 
-  (checkLevelIsCompleted(gameState)) ? levelIsCompletedMode(gameState) : gameState;
+): gameState => {
+    (checkLevelIsCompleted(gameState)) ? levelIsCompletedMode(gameState) : gameState;
+};
+  

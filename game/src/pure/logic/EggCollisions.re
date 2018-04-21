@@ -78,11 +78,12 @@ let calcDistance = (player1: player, player2: player): int => {
   let position1 = Board.getActualPosition(player1.coords);
   let position2 = Board.getActualPosition(player2.coords); 
   let distance = position1.x - position2.x;
-  (distance < 0) ? distance * -1 : distance;
+  let corrected = (distance < 0) ? distance * -1 : distance;
+  corrected;
 };
 
 let isCloseEnough = (player1: player, player2: player): bool => {
-  (calcDistance(player1, player2) <= 20);
+  (calcDistance(player1, player2) <= 30);
 };
 
 /* only deal with horizontal collisions for now */

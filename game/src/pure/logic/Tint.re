@@ -40,5 +40,5 @@ let getTint = (gameState: gameState) : option(color) =>
     };
 
 let getTintForLevelID = (levelID: int): visualMode => {
-    (levelID mod 3 == 0) ? NightTime : (levelID mod 2 == 0) ? GreyScale : Standard;
+    (levelID mod 3 == 0) ? Standard : (levelID mod 2 == 0) ? GreyScale : NightTime;
 };

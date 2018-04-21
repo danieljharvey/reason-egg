@@ -1,113 +1,103 @@
-import { Board } from "../../objects/Board";
-import { Coords } from "../../objects/Coords";
-import { Player } from "../../objects/Player";
-import { Tile } from "../../objects/Tile";
+open EggTypes;
+open Jest;
 
-import * as BoardCollisions from "../BoardCollisions";
+let blankTile = Tiles.blankTile;
 
-const playerTypes = {
-  egg: {
-    value: 1
-  },
-  "big-egg": {
-    value: 2
-  },
-  enemy: {
-    value: 0,
-    flying: true
-  }
-};
-
-const blankTile = new Tile({
-  background: true
-});
-
-const splitterTile = new Tile({
+let splitterTile: tile = {
+  ...Tiles.idTile,
   background: true,
-  action: "split-eggs",
+  action: SplitEggs,
   x: 1,
   y: 1
-});
+};
 
-const blankBoardArray = [[blankTile, blankTile], [blankTile, blankTile]];
+let blankBoard: board = [[blankTile, blankTile], [blankTile, blankTile]];
 
-const blankBoard = new Board(blankBoardArray);
-
-const boardArray = [
+let board: board = [
   [blankTile, blankTile, blankTile],
   [blankTile, splitterTile, blankTile],
   [blankTile, blankTile, blankTile]
 ];
 
-const board = new Board(boardArray);
+describe("Board Collisions", () => {
+  test("Ignores when not on whole tile", () => {
+    open Expect;
 
-test("Ignores when not on whole tile", () => {
-  const player1 = new Player({
-    coords: new Coords({
-      offsetX: 10
-    })
+    let player1 = {
+      ...Player.defaultPlayer,
+      coords: { ...Player.defaultCoords, offsetX: 10 }
+    };
+  
+    expect(BoardCollisions.checkBoardCollisions(board, [player1])) |> toEqual([player1]);
   });
 
-  const actual = BoardCollisions.checkBoardCollisions(board, [
-    player1
-  ]);
+  test("Get splitter tiles", () => {
+    open Expect;
 
-  expect(actual).toEqual([player1]);
-});
-
-test("Get splitter tiles", () => {
-  const tiles = BoardCollisions.getSplitterTiles(board);
-
-  expect(tiles.size).toEqual(1);
-});
-
-test("Do nothing when no splitter tiles", () => {
-  const player1 = new Player({
-    coords: new Coords({
-      offsetX: 10
-    })
+    let tiles = BoardCollisions.getSplitterTiles(board);
+  
+    expect(List.length(tiles)) |> toEqual(1);
   });
 
-  const actual = BoardCollisions.checkBoardCollisions(blankBoard, [
-    player1
-  ]);
+  test("Do nothing when no splitter tiles", () => {
+    open Expect;
 
-  expect(actual).toEqual([player1]);
-});
-
-test("Do nothing when player is not on tile", () => {
-  const player1 = new Player({
-    coords: new Coords({
-      x: 2,
-      y: 2
-    })
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: { ...Player.defaultCoords, offsetX: 10 }
+    };
+  
+    expect(BoardCollisions.checkBoardCollisions(blankBoard, [player1])) |> toEqual([player1]);
   });
 
-  const actual = BoardCollisions.checkBoardCollisions(board, [
-    player1
-  ]);
+  test("Do nothing when player is not on tile", () => {
+    open Expect;
 
-  expect(actual).toEqual([player1]);
-});
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: { ...Player.defaultCoords, x: 2, y: 2 }
+    };
+  
+    expect(BoardCollisions.checkBoardCollisions(board, [player1])) |> toEqual([player1]);
+  });
 
-test("Recognse if player is on a tile", () => {
-  const player1 = new Player({
-    coords: new Coords({
+  test("Recognse if player is on a tile", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: {
+        ...Player.defaultCoords,
+        x: 1,
+        y: 1
+      }
+    };
+  
+    let tile: tile = {
+      ...Tiles.idTile,
+      action: SplitEggs,
       x: 1,
       y: 1
-    })
+    };
+  
+    expect(BoardCollisions.isPlayerOnTile(player1)(tile)) |> toEqual(true);
   });
 
-  const tile = new Tile({
-    action: "split-eggs",
-    x: 1,
-    y: 1
-  });
-
-  const actual = BoardCollisions.isPlayerOnTile(player1)(tile);
-
-  expect(actual).toEqual(true);
 });
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
 
 test("Recognise if player isn't on a tile", () => {
   const player1 = new Player({
@@ -247,3 +237,5 @@ test("Split a 3-value egg when the time is right", () => {
 
   expect(actual).toEqual(expected);
 });
+
+*/

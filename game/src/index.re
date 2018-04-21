@@ -9,7 +9,8 @@ open EggConstants;
 let setup = (env) => {
   let (width, height) = screenSize;
   Env.size(~width, ~height, env);
-  let gameState = EggGame.loadGameState(1);
+  let levelID = Board.getRandomLevelID();
+  let gameState = EggGame.loadGameState(levelID);
   Setup.setupEnvironment(gameState, env);
 };
 
