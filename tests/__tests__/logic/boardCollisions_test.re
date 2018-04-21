@@ -61,7 +61,7 @@ describe("Board Collisions", () => {
     expect(BoardCollisions.checkBoardCollisions(board, [player1])) |> toEqual([player1]);
   });
 
-  test("Recognse if player is on a tile", () => {
+  test("Recognise if player is on a tile", () => {
     open Expect;
 
     let player1: player = {
@@ -83,74 +83,73 @@ describe("Board Collisions", () => {
     expect(BoardCollisions.isPlayerOnTile(player1)(tile)) |> toEqual(true);
   });
 
+  test("Recognise if player isn't on a tile", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: {
+        ...Player.defaultCoords,
+        x: 1,
+        y: 1
+      }
+    };
+  
+    let tile: tile = {
+      ...Tiles.idTile,
+      action: SplitEggs,
+      x: 1,
+      y: 2
+    };
+  
+    expect(BoardCollisions.isPlayerOnTile(player1)(tile)) |> toEqual(false);
+  });
+
+  test("Do nothing when player is of minimum value", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      value: 1,
+      coords: {
+        ...Player.defaultCoords,
+        x: 1,
+        y: 1
+      }
+    };
+
+    expect(BoardCollisions.checkBoardCollisions(board, [
+      player1
+    ])) |> toEqual([player1]);
+  });
+  
+  test("Split a 2-value egg", () => {
+    open Expect;
+    
+    let actual = BoardCollisions.getValuesAndDirections(2);
+    
+    expect(List.length(actual)) |> toEqual(2);
+  });
+
+  test("Split a 3-value egg", () => {
+    open Expect;
+    
+    let actual = BoardCollisions.getValuesAndDirections(3);
+    
+    expect(List.length(actual)) |> toEqual(3);
+  });
+
+  test("Split a 4-value egg", () => {
+    open Expect;
+    
+    let actual = BoardCollisions.getValuesAndDirections(4);
+    
+    expect(List.length(actual)) |> toEqual(2);
+  });
+
 });
 
 /*
-
-
-
-
-
-
-
-
-
-
-
-
-
-test("Recognise if player isn't on a tile", () => {
-  const player1 = new Player({
-    coords: new Coords({
-      x: 1,
-      y: 1
-    })
-  });
-
-  const tile = new Tile({
-    action: "split-eggs",
-    x: 1,
-    y: 2
-  });
-
-  const actual = BoardCollisions.isPlayerOnTile(player1)(tile);
-
-  expect(actual).toEqual(false);
-});
-
-test("Do nothing when player is of minimum value", () => {
-  const player1 = new Player({
-    coords: new Coords({
-      x: 1,
-      y: 1
-    }),
-    value: 1
-  });
-
-  const actual = BoardCollisions.checkBoardCollisions(board, [
-    player1
-  ]);
-
-  expect(actual).toEqual([player1]);
-});
-
-test("Split a 2-value egg", () => {
-  const actual = BoardCollisions.newValues(2);
-
-  expect(actual).toEqual([1, 1]);
-});
-
-test("Split a 3-value egg", () => {
-  const actual = BoardCollisions.newValues(3);
-
-  expect(actual).toEqual([2, 1]);
-});
-
-test("Split a 4-value egg", () => {
-  const actual = BoardCollisions.newValues(4);
-
-  expect(actual).toEqual([2, 2]);
-});
 
 test("Split a 2-value egg", () => {
   const player = new Player({
