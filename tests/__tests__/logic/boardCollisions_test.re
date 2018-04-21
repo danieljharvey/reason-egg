@@ -136,7 +136,7 @@ describe("Board Collisions", () => {
     
     let actual = BoardCollisions.getValuesAndDirections(3);
     
-    expect(List.length(actual)) |> toEqual(3);
+    expect(List.length(actual)) |> toEqual(2);
   });
 
   test("Split a 4-value egg", () => {
@@ -147,94 +147,109 @@ describe("Board Collisions", () => {
     expect(List.length(actual)) |> toEqual(2);
   });
 
-});
+  test("Split a 2-value egg", () => {
+    open Expect;
 
-/*
-
-test("Split a 2-value egg", () => {
-  const player = new Player({
-    value: 2
-  });
-
-  const expected = [
-    player.modify({
-      direction: new Coords({
-        x: -1
-      }),
-      value: 1,
-      img: "egg-sprite.png",
-      title: "It is of course the egg",
-      lastAction: "split",
-      frames: 18
-    }),
-    player.modify({
-      direction: new Coords({
-        x: 1
-      }),
-      value: 1,
-      img: "egg-sprite.png",
-      title: "It is of course the egg",
-      lastAction: "split",
-      frames: 18
-    })
-  ];
-
-  const actual = BoardCollisions.splitPlayer(player);
-
-  expect(actual).toEqual(expected);
-});
-
-test("Get values and directions", () => {
-  const value = 2;
-
-  const expected = [{ value: 1, direction: -1 }, { value: 1, direction: 1 }];
-
-  const actual = BoardCollisions.getValuesAndDirections(value);
-
-  expect(actual).toEqual(expected);
-});
-
-test("Split a 3-value egg when the time is right", () => {
-  const player1 = new Player({
-    coords: new Coords({
-      x: 1,
-      y: 1
-    }),
-    value: 3
-  });
-
-  const expected = [
-    player1.modify({
-      direction: new Coords({
-        x: -1
-      }),
+    let player = {
+      ...Player.defaultPlayer,
       value: 2,
-      img: "egg-sprite-red.png",
-      title: "It is of course the red egg",
-      type: 'red-egg',
-      id: 0,
-      frames :18,
-      multiplier: 2,
-      lastAction: "split"
-    }),
-    player1.modify({
-      direction: new Coords({
-        x: 1
-      }),
-      img: 'egg-sprite.png',
-      title: "It is of course the egg",
-      value: 1,
-      id: 1,
-      frames: 18,
-      lastAction: "split"
-    })
-  ];
+      playerType: RedEgg
+    };
+  
+    let expected = [
+      {
+        ...player,
+        direction: {
+          ...Player.defaultCoords,
+          x: -1
+        },
+        value: 1,
+        playerType: Egg,
+        filename: "sprites/egg-sprite.png",
+        title: "It is of course the egg",
+        lastAction: "split",
+        frames: 18
+      },
+      {
+        ...player,
+        direction: {
+          ...Player.defaultCoords,
+          x: 1
+        },
+        value: 1,
+        playerType: Egg,
+        filename: "sprites/egg-sprite.png",
+        title: "It is of course the egg",
+        lastAction: "split",
+        frames: 18
+      }
+    ];
+  
+    expect(BoardCollisions.splitPlayer(player)) |> toEqual(Some(expected));
+  });
 
-  const actual = BoardCollisions.checkBoardCollisions(board, [
-    player1
-  ]);
+  test("Get values and directions", () => {
+    open Expect;
 
-  expect(actual).toEqual(expected);
+    let value = 2;
+    
+    let left: coords = { ...Player.defaultCoords, x: -1 };
+    let right: coords = { ...Player.defaultCoords, x: 1 };
+
+    let expected: list(BoardCollisions.splitItem) = [{ value: 1, direction: left }, { value: 1, direction: right }];
+  
+    expect(BoardCollisions.getValuesAndDirections(value)) |> toEqual(expected);
+  });
+
+  test("Split a 3-value egg when the time is right", () => {
+    open Expect;
+
+    let player1: player = {
+      ...Player.defaultPlayer,
+      coords: {
+        ...Player.defaultCoords,
+        x: 1,
+        y: 1
+      },
+      value: 3,
+      playerType: BlueEgg
+    };
+  
+    let expected = [
+      {
+        ...player1,
+        direction: {
+          ...Player.defaultCoords,
+          x: -1
+        },
+        value: 2,
+        filename: "sprites/egg-sprite-red.png",
+        title: "It is of course the red egg",
+        playerType: RedEgg,
+        id: 0,
+        frames :18,
+        multiplier: 2,
+        lastAction: "split"
+      },
+      {
+        ...player1,
+        direction: {
+          ...Player.defaultCoords,
+          x: 1
+        },
+        filename: "sprites/egg-sprite.png",
+        title: "It is of course the egg",
+        value: 1,
+        playerType: Egg,
+        id: 1,
+        frames: 18,
+        lastAction: "split"
+      }
+    ];
+  
+    expect(BoardCollisions.checkBoardCollisions(board, [
+      player1
+    ])) |> toEqual(expected);
+  });
+
 });
-
-*/
