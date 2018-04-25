@@ -1,19 +1,7 @@
 open Reprocessing_Env;
 
 open JsTypes;
-
-let audio = [
-    "audio/bounce.wav",
-    "audio/bright-bell.wav",
-    "audio/crate-smash.wav",
-    "audio/pop.wav",
-    "audio/power-up.wav",
-    "audio/soft-bell.wav",
-    "audio/switch.wav",
-    "audio/thud.wav",
-    "audio/warp.wav",
-    "audio/woo.wav"
-];
+open AudioTriggers;
 
 let loadAudioFile = (env, filename: string): audioAsset => {
     (filename, loadSound("assets/" ++ filename, env));
@@ -21,10 +9,12 @@ let loadAudioFile = (env, filename: string): audioAsset => {
 
 let playAudioFile = (env, audioAsset: audioAsset) => {
     let audio = snd(audioAsset);
-    playSound(audio, env);
+    playSound(audio, ~loop=false, ~volume=1.0, env);
 };
 
-let loadAudioFiles = (filenames: list(string), env): list(audioAsset) => List.map(loadAudioFile(env), filenames);
+let loadAudioFiles = (audioSamples: list(audioSample), env): list(audioAsset) => 
+    List.map(filename, audioSamples)
+    |> List.map(loadAudioFile(env));
 
 let getAudioAssetByID =
     (audioAssets: list(audioAsset), filename: string)
