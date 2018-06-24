@@ -1,221 +1,305 @@
-import { Board } from "../../objects/Board";
-import { Coords } from "../../objects/Coords";
-import { Player } from "../../objects/Player";
-import { Tile } from "../../objects/Tile";
+open EggTypes;
+open Jest;
 
-import * as Map from "../Map";
-import * as Movement from "../Movement";
+describe("Egg movements", () => {
+  test("Stay still when not moving", () => {
+    open Expect;
 
-test("Stay still when not moving", () => {
-  const player = new Player();
-  const response = Movement.incrementPlayerFrame(player);
-  expect(response.currentFrame).toEqual(player.currentFrame);
-});
-
-test("Wipe old direction when stopped", () => {
-  const player = new Player({
-    oldDirection: new Coords({
-      x: 1,
-      y: 0
-    })
+    let player = Player.defaultPlayer;
+    let response = EggMovement.incrementPlayerFrame(player);
+    expect(response.currentFrame) |> toEqual(player.currentFrame);
   });
 
-  const expected = new Coords();
+  test("Wipe old direction when stopped", () => {
+    open Expect;
 
-  const response = Movement.incrementPlayerFrame(player);
-  expect(response.oldDirection).toEqual(expected);
-});
-
-test("Move left", () => {
-  const player = new Player({
-    direction: new Coords({
-      x: -1
-    }),
-    coords: new Coords({
-      x: 2,
-      y: 2
-    })
+    let player = {
+      ...Player.defaultPlayer,
+      oldDirection: {
+        ...Player.defaultCoords,
+        x: 1,
+        y: 0
+      }
+    };
+  
+    let expected = Player.defaultCoords;
+  
+    let response = EggMovement.incrementPlayerFrame(player);
+    expect(response.oldDirection) |> toEqual(expected);
   });
 
-  const timePassed = 10;
-  const moveAmount = Movement.calcMoveAmount(player.moveSpeed, timePassed);
+  test("Move left", () => {
+    open Expect;
 
-  const expected = player.modify({
-    coords: player.coords.modify({
-      offsetX: -moveAmount
-    })
+    let player = {
+      ...Player.defaultPlayer,
+      direction: {
+        ...Player.defaultCoords,
+        x: -1
+      },
+      coords: {
+        ...Player.defaultCoords,
+        x: 2,
+        y: 2
+      }
+    };
+  
+    let timePassed = 10.0;
+    let moveAmount = EggMovement.calcMoveAmount(player.moveSpeed, timePassed);
+  
+    let expected = {
+      ...player,
+      coords: {
+        ...player.coords,
+        offsetX: -moveAmount
+      }
+    };
+  
+    let response = EggMovement.incrementPlayerDirection(timePassed, player);
+    expect(response) |> toEqual(expected);
   });
 
-  const response = Movement.incrementPlayerDirection(timePassed)(player);
-  expect(response).toEqual(expected);
-});
+  test("Move right", () => {
+    open Expect;
 
-test("Move right", () => {
-  const player = new Player({
-    direction: new Coords({
-      x: 1
-    }),
-    coords: new Coords({
-      x: 2,
-      y: 2
-    })
+    let player = {
+      ...Player.defaultPlayer,
+      direction: {
+        ...Player.defaultCoords,
+        x: 1
+      },
+      coords: {
+        ...Player.defaultCoords,
+        x: 2,
+        y: 2
+      }
+    };
+  
+    let timePassed = 10.0;
+    let moveAmount = EggMovement.calcMoveAmount(player.moveSpeed, timePassed);
+  
+    let expected = {
+      ...player,
+      coords: {
+        ...player.coords,
+        offsetX: moveAmount
+      }
+    };
+  
+    let response = EggMovement.incrementPlayerDirection(timePassed, player);
+    expect(response) |> toEqual(expected);
   });
 
-  const timePassed = 10;
-  const moveAmount = Movement.calcMoveAmount(player.moveSpeed, timePassed);
+  test("Move up", () => {
+    open Expect;
 
-  const expected = player.modify({
-    coords: player.coords.modify({
-      offsetX: moveAmount
-    })
+    let player = {
+      ...Player.defaultPlayer,
+      direction: {
+        ...Player.defaultCoords,
+        y: -1
+      },
+      coords: {
+        ...Player.defaultCoords,
+        x: 2,
+        y: 2
+      }
+    };
+  
+    let timePassed = 10.0;
+    let moveAmount = EggMovement.calcMoveAmount(player.moveSpeed, timePassed);
+  
+    let expected = {
+      ...player,
+      coords: {
+        ...player.coords,
+        offsetY: -moveAmount
+      }
+    };
+  
+    let response = EggMovement.incrementPlayerDirection(timePassed, player);
+    expect(response) |> toEqual(expected);
   });
 
-  const response = Movement.incrementPlayerDirection(timePassed)(player);
-  expect(response).toEqual(expected);
-});
+  test("Move down", () => {
+    open Expect;
 
-test("Move up", () => {
-  const player = new Player({
-    direction: new Coords({
-      y: -1
-    }),
-    coords: new Coords({
-      x: 2,
-      y: 2
-    })
+    let player = {
+      ...Player.defaultPlayer,
+      direction: {
+        ...Player.defaultCoords,
+        y: 1
+      },
+      coords: {
+        ...Player.defaultCoords,
+        x: 2,
+        y: 2
+      }
+    };
+  
+    let timePassed = 10.0;
+    let moveAmount = EggMovement.calcMoveAmount(player.moveSpeed, timePassed);
+  
+    let expected = {
+      ...player,
+      coords: {
+        ...player.coords,
+        offsetY: moveAmount
+      }
+    };
+  
+    let response = EggMovement.incrementPlayerDirection(timePassed, player);
+    expect(response) |> toEqual(expected);
   });
 
-  const timePassed = 10;
-  const moveAmount = Movement.calcMoveAmount(player.moveSpeed, timePassed);
+  test("change frame left", () => {
+    open Expect;
 
-  const expected = player.modify({
-    coords: player.coords.modify({
-      offsetY: -moveAmount
-    })
+    let player: player = {
+      ...Player.defaultPlayer,
+      currentFrame: 3,
+      direction: {
+        ...Player.defaultCoords,
+        x: -1,
+        y: 0
+      }
+    };
+    let response = EggMovement.incrementPlayerFrame(player);
+    expect(response.currentFrame) |> toEqual(2);
   });
 
-  const response = Movement.incrementPlayerDirection(timePassed)(player);
-  expect(response).toEqual(expected);
-});
+  test("change frame right", () => {
+    open Expect;
+    
+    let player: player = {
+      ...Player.defaultPlayer,
+      currentFrame: 10,
+      frames: 11,
+      oldDirection: {
+        ...Player.defaultCoords,
+        x: 1,
+        y: 0
+      }
+    };
 
-test("Move down", () => {
-  const player = new Player({
-    direction: new Coords({
-      y: 1
-    }),
-    coords: new Coords({
-      x: 2,
-      y: 2
-    })
+    let response = EggMovement.incrementPlayerFrame(player);
+    expect(response.currentFrame) |> toEqual(0);
   });
 
-  const timePassed = 10;
-  const moveAmount = Movement.calcMoveAmount(player.moveSpeed, timePassed);
+  test("change going up", () => {
+    open Expect;
 
-  const expected = player.modify({
-    coords: player.coords.modify({
-      offsetY: moveAmount
-    })
+    let player: player = {
+      ...Player.defaultPlayer,
+      currentFrame: 3,
+      direction: {
+        ...Player.defaultCoords,
+        x: 0,
+        y: -1
+      }
+    };
+    let response = EggMovement.incrementPlayerFrame(player);
+    expect(response.currentFrame) |> toEqual(2);
   });
 
-  const response = Movement.incrementPlayerDirection(timePassed)(player);
-  expect(response).toEqual(expected);
-});
+  test("change going down", () => {
 
-test("change frame left", () => {
-  const player = new Player({
-    currentFrame: 3,
-    direction: new Coords({
-      x: -1,
-      y: 0
-    })
+    open Expect;
+
+    let player: player = {
+      ...Player.defaultPlayer,
+      currentFrame: 10,
+      frames: 11,
+      oldDirection: {
+        ...Player.defaultCoords,
+        x: 0,
+        y: 1
+      }
+    };
+    let response = EggMovement.incrementPlayerFrame(player);
+    expect(response.currentFrame) |> toEqual(0);
   });
-  const response = Movement.incrementPlayerFrame(player);
-  expect(response.currentFrame).toEqual(2);
-});
 
-test("change frame right", () => {
-  const player = new Player({
-    currentFrame: 10,
-    frames: 11,
-    oldDirection: new Coords({
-      x: 1,
-      y: 0
-    })
+  test("Calculate move amount 1", () => {
+    open Expect;
+
+    let player = Player.defaultPlayer;
+    expect(EggMovement.calcMoveAmount(10, 10.0)) |> toEqual(3000);
   });
-  const response = Movement.incrementPlayerFrame(player);
-  expect(response.currentFrame).toEqual(0);
-});
 
-test("change going up", () => {
-  const player = new Player({
-    currentFrame: 3,
-    direction: new Coords({
-      x: 0,
-      y: -1
-    })
+  test("Calculate move amount 2", () => {
+    open Expect;
+
+    let player = Player.defaultPlayer;
+    expect(EggMovement.calcMoveAmount(10, 20.0)) |> toEqual(6000);
   });
-  const response = Movement.incrementPlayerFrame(player);
-  expect(response.currentFrame).toEqual(2);
-});
 
-test("change going down", () => {
-  const player = new Player({
-    currentFrame: 10,
-    frames: 11,
-    oldDirection: new Coords({
-      x: 0,
-      y: 1
-    })
+  test("Egg with no speed stays still", () => {
+    open Expect;
+
+    let player = {
+      ...Player.defaultPlayer,
+      moveSpeed: 0
+    };
+
+    let movedPlayer = EggMovement.incrementPlayerDirection(1.0, player);
+  
+    expect(player.coords) |> toEqual(movedPlayer.coords);
   });
-  const response = Movement.incrementPlayerFrame(player);
-  expect(response.currentFrame).toEqual(0);
-});
 
-test("Calculate move amount", () => {
-  const player = new Player();
-  expect(Movement.calcMoveAmount(10, 10)).toEqual(5);
-  expect(Movement.calcMoveAmount(10, 20)).toEqual(10);
-});
+  test("No change in overflow", () => {
+    open Expect;
 
-test("Egg with no speed stays still", () => {
-  const player = new Player({
-    moveSpeed: 0
+    let coords: coords = { x: 1, y: 0, offsetX: 63, offsetY: 0 };
+  
+    let fixedCoords = EggMovement.correctTileOverflow(coords);
+  
+    expect(fixedCoords) |> toEqual(coords);
   });
-  const movedPlayer = Movement.incrementPlayerDirection(1)(player);
 
-  const oldCoords = player.coords;
-  const newCoords = movedPlayer.coords;
+  test("Overflow to right updates x", () => {
+    open Expect;
 
-  expect(oldCoords.equals(newCoords)).toEqual(true);
+    let coords: coords = { x: 0, y: 0, offsetX: 100, offsetY: 0 };
+  
+    let fixedCoords = EggMovement.correctTileOverflow(coords);
+  
+    expect(fixedCoords.x) |> toEqual(1);
+  });
+
+  test("Overflow to right updates offsetX", () => {
+    open Expect;
+
+    let coords: coords = { x: 0, y: 0, offsetX: 100, offsetY: 0 };
+  
+    let fixedCoords = EggMovement.correctTileOverflow(coords);
+  
+    expect(fixedCoords.offsetX) |> toEqual(0);
+  });
+
+  test("Overflow to left updates x", () => {
+    open Expect;
+
+    let coords: coords = { x: 3, y: 0, offsetX: -100, offsetY: 0 };
+  
+    let fixedCoords = EggMovement.correctTileOverflow(coords);
+  
+    expect(fixedCoords.x) |> toEqual(2);
+  });
+
+  test("Overflow to left updates offsetX", () => {
+    open Expect;
+
+    let coords: coords = { x: 3, y: 0, offsetX: -100, offsetY: 0 };
+  
+    let fixedCoords = EggMovement.correctTileOverflow(coords);
+  
+    expect(fixedCoords.offsetX) |> toEqual(0);
+  });
 });
 
-test("Overflow remains the same", () => {
-  const coords = new Coords({ x: 1, y: 0, offsetX: 75, offsetY: 0 });
 
-  const fixedCoords = Movement.correctTileOverflow(coords);
-
-  expect(fixedCoords.x).toEqual(1);
-  expect(fixedCoords.offsetX).toEqual(75);
-});
-
-test("No overflow to right", () => {
-  const coords = new Coords({ x: 0, y: 0, offsetX: 100, offsetY: 0 });
-
-  const fixedCoords = Movement.correctTileOverflow(coords);
-
-  expect(fixedCoords.x).toEqual(1);
-  expect(fixedCoords.offsetX).toEqual(0);
-});
-
-test("No overflow to left", () => {
-  const coords = new Coords({ x: 3, y: 0, offsetX: -100, offsetY: 0 });
-
-  const fixedCoords = Movement.correctTileOverflow(coords);
-
-  expect(fixedCoords.x).toEqual(2);
-  expect(fixedCoords.offsetX).toEqual(0);
-});
+/*
 
 test("No overflow above", () => {
   const coords = new Coords({ x: 0, y: 4, offsetX: 0, offsetY: -100 });
@@ -582,3 +666,5 @@ test("Flying player bounce off left", () => {
 
   expect(result.equals(expected)).toEqual(true);
 });
+
+*/

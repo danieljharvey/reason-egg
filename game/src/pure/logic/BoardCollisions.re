@@ -26,9 +26,8 @@ let getValuesAndDirections = (value: int): list(splitItem) => {
     ];
   } else if (value === 3) {
     [
-      {value:1, direction: {...Player.defaultCoords, x: -1}},
-      {value:1, direction: {...Player.defaultCoords, x: 1}},
-      {value:1, direction: Player.defaultCoords}
+      {value:2, direction: {...Player.defaultCoords, x: -1}},
+      {value:1, direction: {...Player.defaultCoords, x: 1}}
     ];
   } else if (value === 4) {
     [
