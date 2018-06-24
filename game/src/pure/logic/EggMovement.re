@@ -224,23 +224,30 @@ let playerRegularRolling = (deltaTime: float, player: player): player => {
         offsetX: coords.offsetX + moveAmount
       }
     };
+  } else if (player.direction.y < 0) {
+      /* move left */
+      {
+        ...player,
+        coords: {
+          ...coords,
+          offsetY: coords.offsetY - moveAmount
+        }
+      };
+    } else if (player.direction.y > 0) {
+      /* move right */
+      {
+        ...player,
+        coords: {
+          ...coords,
+          offsetY: coords.offsetY + moveAmount
+        }
+      };
   } else {
     player;
   };
 };
-/* this does the left/right moving, but does not care if walls are there as that is the responsibility of checkPlayerDirection */
-let incrementPlayerDirection = (deltaTime: float, player: player): player => {
 
-  if (player.falling) {
-    playerFalling(deltaTime, player);
-  } else if (player.moveSpeed === 0 || player.stop !== false) {
-    player;
-  } else {
-    playerRegularRolling(deltaTime, player);
-  };
-
-  /* ALL THIS CORRECTION SHIT NEEDS IT'S OWN FUNCTION YO */
-
+let correctOffsetWhenStopped = (deltaTime: float, player: player): player => {
   /* if we've stopped and ended up not quite squared up, correct this */
   /*
   if (player.direction.x === 0) {
@@ -310,7 +317,18 @@ let incrementPlayerDirection = (deltaTime: float, player: player): player => {
   }
   */
 
-  /* player; */
+  player;
+};
+
+/* this does the left/right moving, but does not care if walls are there as that is the responsibility of checkPlayerDirection */
+let incrementPlayerDirection = (deltaTime: float, player: player): player => {
+  if (player.falling) {
+    playerFalling(deltaTime, player);
+  } else if (player.moveSpeed === 0 || player.stop !== false) {
+    correctOffsetWhenStopped(deltaTime, player);
+  } else {
+    playerRegularRolling(deltaTime, player);
+  };
 };
 
 let playerIsTrapped = (board: board, player: player): bool => (
