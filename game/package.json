@@ -13,6 +13,9 @@
     "clean": "bsb -clean-world",
     "web:serve": "python -m SimpleHTTPServer"
   },
+  "jest": {
+    "testURL":"http://localhost"
+  },
   "dependencies": {
     "reprocessing": "0.2.0"
   },
