@@ -6,6 +6,6 @@ type gameState =
   | Loading
   | Playing;
 
-let gameSpeed: float = 40.0;
+let gameSpeed: float = 60.0;
 
-let rotateSpeed: float = 150.0;
+let rotateSpeed: float = 200.0;
