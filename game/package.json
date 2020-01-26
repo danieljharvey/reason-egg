@@ -14,9 +14,9 @@
     "web:serve": "python -m SimpleHTTPServer"
   },
   "dependencies": {
-    "reprocessing": "0.2.0"
+    "Reprocessing": "schmavery/reprocessing"
   },
   "devDependencies": {
-    "bsb-native": "4.0.6"
+    "bs-platform": "bsansouci/bsb-native#2.1.1"
   }
 }
