@@ -10,7 +10,7 @@ let setup = (env) => {
   let (width, height) = screenSize;
   Env.size(~width, ~height, env);
   let levelID = Board.getRandomLevelID();
-  let gameState = EggGame.loadGameState(levelID);
+  let gameState = EggGame.loadGameState(levelID);  
   Setup.setupEnvironment(gameState, env);
 };
 
@@ -44,10 +44,11 @@ let drawNothing = (env, gameStuff: gameStuff): gameStuff => {
   gameStuff;
 };
 
-let rotateBoardLeft = (angle: float, gameStuff, deltaTime): gameStuff => {
+let rotateBoardLeft = (angle: float, gameStuff, deltaTime, env): gameStuff => {
   let boardAngle = -1.0 *. angle;
   let newAngle = angle +. (deltaTime *. EggConstants.rotateSpeed);
   let newGameAction = angle > 90.0 ? TurnLeft : RotatingLeft(newAngle);
+  PlayAudio.playAudioAssetByID(env, gameStuff.audioAssets, "audio/woo.wav");
   {
     ...gameStuff,
     gameState: {
@@ -76,7 +77,7 @@ let rotateBoardRight = (angle: float, gameStuff, deltaTime): gameStuff => {
 let draw = (gameStuff: gameStuff, env): gameStuff => {
   let deltaTime = Env.deltaTime(env);
   let newGameStuff = switch gameStuff.gameState.gameAction {
-  | RotatingLeft(angle) => rotateBoardLeft(angle, gameStuff, deltaTime)
+  | RotatingLeft(angle) => rotateBoardLeft(angle, gameStuff, deltaTime, env)
   | RotatingRight(angle) => rotateBoardRight(angle, gameStuff, deltaTime)
   | Paused => drawNothing(env, gameStuff)
   | _ => updateGameStuff(gameStuff, deltaTime)

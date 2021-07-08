@@ -189,7 +189,6 @@ let playerFalling = (deltaTime: float, player: player): player => {
   
   let fallAmount: int = calcMoveAmount(player.fallSpeed, deltaTime);
   
-  let newOffsetY = player.coords.offsetX + fallAmount;
   let newCoords = {
     ...player.coords,
     offsetY: player.coords.offsetY + fallAmount
