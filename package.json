@@ -1,14 +1,17 @@
 {
-    "name": "reason-egg-tests",
-    "scripts": {
-        "build": "bsb -make-world",
-        "test": "yarn build && jest"
-    },
-    "devDependencies": {
-        "bs-platform": "^2.2.3"
-    },
-    "dependencies": {
-        "@glennsl/bs-jest": "^0.4.2",
-        "jest": "^22.4.3"
-    }
+  "name": "reason-egg-tests",
+  "scripts": {
+    "build": "bsb -make-world",
+    "test": "yarn build && jest"
+  },
+  "devDependencies": {
+    "bs-platform": "^2.2.3"
+  },
+  "dependencies": {
+    "@glennsl/bs-jest": "^0.4.2",
+    "jest": "^22.4.3"
+  },
+  "jest": {
+    "testURL": "http://localhost"
+  }
 }

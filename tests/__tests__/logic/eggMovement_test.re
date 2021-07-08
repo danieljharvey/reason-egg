@@ -188,12 +188,12 @@ describe("Egg movements", () => {
   test("Calculate move amount 1", () => {
     open Expect;
     let player = Player.defaultPlayer;
-    expect(EggMovement.calcMoveAmount(10, 10.0)) |> toEqual(4000);
+    expect(EggMovement.calcMoveAmount(10, 10.0)) |> toEqual(6000);
   });
   test("Calculate move amount 2", () => {
     open Expect;
     let player = Player.defaultPlayer;
-    expect(EggMovement.calcMoveAmount(10, 20.0)) |> toEqual(8000);
+    expect(EggMovement.calcMoveAmount(10, 20.0)) |> toEqual(12000);
   });
   test("Egg with no speed stays still", () => {
     open Expect;
